@@ -1,8 +1,22 @@
 import time
+import os
 from time import sleep
 char = 9608
-leng = 128
-heig = 36
+leng = 78
+heig = 12
+x = True
+sdelay = 0
+while x:
+	print("0 - Flash\n1 - Scroll Slow\n2 - Scroll Own Delay\n3 - Scroll No Delay\n4 - Quit")
+
+
+	dtype = int(input(">"))
+	if (dtype == 2):
+		sdelay = float(input("Scroll Delay"))
+	if(dtype >= 0 and dtype < 4):
+		x = False
+	elif(dtype == 4):
+		exit()
 class grid(object):
 	grid = {}
 	width = 0
@@ -18,14 +32,24 @@ class grid(object):
 	def set(self,x,y,b):
 		self.grid[str(x)+" - "+str(y)] = b
 def draw(scr):
+	string = str("")
 	for y in range(heig):
-	
-		string = str("")
 		for x in range(leng):		
 			if(scr.get(x,y)):
 				string+=chr(char)
 			else:
 				string+=" "
+		if (dtype == 0):
+			string +="\n"
+		elif (dtype >= 1):
+			print(string)
+			string=""
+			if (dtype == 1):
+				sleep(0.01)
+			else:
+				sleep(sdelay)
+	if (dtype == 0):
+		os.system("cls")
 		print(string)
 def number(scr,x,y,num):
 	fill(scr,x,y,10,10,False)
@@ -95,15 +119,13 @@ def fill(scr, x,y,w,h,b):
 	for i in range(w):
 		for j in range(h):
 			scr.set(x+i,j+y,b)
-
-
 from datetime import datetime as dt
 g = grid()
 g.setup(leng,heig)
 now = None
 while True:
 	if(now != dt.now().second):
-		hi = int((heig-8)/2)
+		hi = int((heig-10)/2)
 		hour = dt.now().hour
 		h1 = str(hour)[0]
 		if len(str(hour))>1:
@@ -113,10 +135,8 @@ while True:
 			h1 = 0
 		h1 = int(h1)
 		h2 = int(h2)
-
 		number(g,2,hi,h1)
 		number(g,14,hi,h2)
-
 		minu = dt.now().minute
 		m1 = str(minu)[0]
 		if len(str(minu))>1:
@@ -126,10 +146,8 @@ while True:
 			m1 = 0
 		m1 = int(m1)
 		m2 = int(m2)
-
 		number(g,28,hi,m1)
 		number(g,40,hi,m2)
-
 		seco = dt.now().second
 		s1 = str(seco)[0]
 		if len(str(seco))>1:
@@ -139,10 +157,8 @@ while True:
 			s1 = 0
 		s1 = int(s1)
 		s2 =int(s2)
-
 		number(g,54,hi,s1)
 		number(g,66,hi,s2)
-
 		draw(g)
 		now = dt.now().second
 print(dt.now().hour)
