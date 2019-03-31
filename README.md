@@ -7,6 +7,9 @@ This clock has two main animation methords:
   <li>Scroll - The new times scrolls up from beneath.</li>
 </ul>
 
+### Scroll animation in effect
+
+<img src="TClock-Scroll.png"/>
 
 ## How to get the most out of this clock (linux)
 
