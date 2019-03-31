@@ -1,6 +1,12 @@
 # TClock
 
-A clock that runs in terminal, it may need to be modified to fill the screen/terminal emulator.
+A large digital clock that runs in a terminal. <br/>
+This clock has two main animation methords:
+<ul>
+  <li>Flash - Clears the screen.</li>
+  <li>Scroll - The new times scrolls up from beneath.</li>
+</ul>
+
 
 ## How to get the most out of this clock (linux)
 
