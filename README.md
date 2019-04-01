@@ -7,6 +7,28 @@ This clock has two main animation methords:
   <li>Scroll - The new times scrolls up from beneath.</li>
 </ul>
 
+## Requirements
+### Minimum
+
+<ul>
+  <li>Width - 78 characters</li>
+  <li>Heights - 14 characters</li>
+  <li>python3.x installed</li>
+  <li>3754 bytes free</li>
+  <li>17.9 MiB of RAM free</li>
+</ul>
+
+### Recomended
+
+<ul>
+  <li>Width - 78 characters</li>
+  <li>Heights - 14 characters</li>
+  <li>3.6.7 installed</li>
+  <li>1 MiB free</li>
+  <li>1 GiB of RAM free</li>
+</ul>
+  
+## Screenshots
 ### Scroll animation in effect
 
 <img src="TClock-Scroll.png"/>
