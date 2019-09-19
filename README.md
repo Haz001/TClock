@@ -34,7 +34,7 @@ This clock has two main animation methords:
 
 <img src="TClock-Scroll.png"/>
 
-## How to get the most out of this clock (linux)
+## How to get the most out of this clock (GNU/Linux)
 
 <ol>
   <li>Press ctr+alt+F2 to enter a termianl view and login again.</li>
