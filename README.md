@@ -23,9 +23,10 @@ This clock has two main animation methords:
 <ul>
   <li>Width - 78 characters</li>
   <li>Heights - 14 characters</li>
-  <li>3.6.7 installed</li>
+  <li>Python3.6.7 installed</li>
   <li>1 MiB free</li>
   <li>1 GiB of RAM free</li>
+  <li>GNU/Linux</li>
 </ul>
   
 ## Screenshots
@@ -39,7 +40,7 @@ This clock has two main animation methords:
   <li>Press ctr+alt+F2 to enter a termianl view and login again.</li>
   <li>Go to the directory it is stored in using the cd comand</li>
   <li>run it with python3</li>
-  <li>Watch it for a couple seconds to days.</li>
+  <li>Watch it for a couple seconds to a couple years.</li>
 </ol>
 
 ## How to get the most out of this clock (windows)
