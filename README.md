@@ -14,7 +14,7 @@ This clock has two main animation methords:
   <li>Width - 78 characters</li>
   <li>Heights - 14 characters</li>
   <li>python3.x installed</li>
-  <li>3754 bytes free</li>
+  <li>3709 bytes free</li>
   <li>17.9 MiB of RAM free</li>
 </ul>
 
