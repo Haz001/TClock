@@ -1,15 +1,25 @@
+#!/usr/bin/env python3
 import time
 import os
 from time import sleep
 char = 9608
-leng = 78
+blockstart = '\x1b[7;30;39m'
+block = " "
+blockend = '\x1b[0m'
+leng = 80
 heig = 12
 x = True
 sdelay = 0
+clearc =""
+from sys import platform
+if platform == "linux" or platform == "linux2":
+    clearc ="clear"
+elif platform == "darwin":
+    clearc ="clear"
+elif platform == "win32":
+    clearc ="cls"
 while x:
 	print("0 - Flash\n1 - Scroll Slow\n2 - Scroll Own Delay\n3 - Scroll No Delay\n4 - Quit")
-
-
 	dtype = int(input(">"))
 	if (dtype == 2):
 		sdelay = float(input("Scroll Delay"))
@@ -32,25 +42,26 @@ class grid(object):
 	def set(self,x,y,b):
 		self.grid[str(x)+" - "+str(y)] = b
 def draw(scr):
-	string = str("")
-	for y in range(heig):
-		for x in range(leng):		
-			if(scr.get(x,y)):
-				string+=chr(char)
-			else:
-				string+=" "
-		if (dtype == 0):
-			string +="\n"
-		elif (dtype >= 1):
-			print(string)
-			string=""
-			if (dtype == 1):
-				sleep(0.01)
-			else:
-				sleep(sdelay)
-	if (dtype == 0):
-		os.system("cls")
-		print(string)
+    string = str("")
+    for y in range(heig):
+        for x in range(leng):
+            if(scr.get(x,y)):
+                string += blockstart+block+blockend
+                string  = string.replace(blockend+blockstart,"")
+            else:
+                string+=" "
+        if (dtype == 0):
+            string +="\n"
+        elif (dtype >= 1):
+            print(string)
+            string=""
+            if (dtype == 1):
+                sleep(0.01)
+            else:
+                sleep(sdelay)
+    if (dtype == 0):
+        os.system(clearc)
+        print(string)
 def number(scr,x,y,num):
 	fill(scr,x,y,10,10,False)
 	if (num == 1):
@@ -84,7 +95,7 @@ def number(scr,x,y,num):
 		fill(scr,x+1,y+8,8,1,True)
 		fill(scr,x+8,y+4,1,4,True)
 		fill(scr,x+1,y+4,8,1,True)
-		
+
 	elif (num == 7):
 		fill(scr,x+1,y+1,8,1,True)
 		fill(scr,x+8,y+2,1,1,True)
@@ -146,8 +157,8 @@ while True:
 			m1 = 0
 		m1 = int(m1)
 		m2 = int(m2)
-		number(g,28,hi,m1)
-		number(g,40,hi,m2)
+		number(g,29,hi,m1)
+		number(g,41,hi,m2)
 		seco = dt.now().second
 		s1 = str(seco)[0]
 		if len(str(seco))>1:
@@ -157,25 +168,8 @@ while True:
 			s1 = 0
 		s1 = int(s1)
 		s2 =int(s2)
-		number(g,54,hi,s1)
-		number(g,66,hi,s2)
+		number(g,56,hi,s1)
+		number(g,68,hi,s2)
 		draw(g)
 		now = dt.now().second
 print(dt.now().hour)
-
-# number(g,2,2,1)
-# number(g,14,2,2)
-# number(g,26,2,3)
-# number(g,38,2,4)
-# number(g,50,2,5)
-# number(g,62,2,6)
-# number(g,74,2,7)
-# number(g,86,2,8)
-# number(g,98,2,9)
-# number(g,110,2,0)
-
-
-
-# while True:
-# 	sleep(0.1)
-# 	draw(g)
