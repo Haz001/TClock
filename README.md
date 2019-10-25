@@ -36,7 +36,7 @@ no optin		Default settings
 ### Minimum
 
 <ul>
-  <li>Width - 78 characters</li>
+  <li>Width - 81 characters</li>
   <li>Heights - 14 characters</li>
   <li>python3.x installed</li>
   <li>3709 bytes free</li>
@@ -46,7 +46,7 @@ no optin		Default settings
 ### Recomended
 
 <ul>
-  <li>Width - 78 characters</li>
+  <li>Width - 81 characters</li>
   <li>Heights - 14 characters</li>
   <li>Python3.6.7 installed</li>
   <li>1 MiB free</li>
