@@ -7,6 +7,31 @@ This clock has two main animation methords:
   <li>Scroll - The new times scrolls up from beneath.</li>
 </ul>
 
+## ToDo
+- [x] Displays time
+- [x] CLI menu
+- [x] Argument management
+- [x] Help
+- [ ] One Instance
+- [ ] Write out to file
+- [ ] Count down
+- [ ] Graphical Mode
+
+## Help
+
+<pre>Usage: tclock [OPTION] [FILE, DATE]...
+
+no optin		Default settings
+-m			CLI Menu
+-g			GitHub Link
+
+<span style="background-color:#CC0000"><b>In Development</b></span>
+<span style="background-color:#CC0000"><b>-i</b></span>			<span style="background-color:#CC0000"><b>One Instance (good for &apos;watch&apos; command or just to check time) [InDevelopment]</b></span>
+<span style="background-color:#CC0000"><b>-w [FILE]</b></span>		<span style="background-color:#CC0000"><b>Write out to file [InDevelopment]</b></span>
+<span style="background-color:#CC0000"><b>-c [DATE]</b></span>		<span style="background-color:#CC0000"><b>Count Down to that date [InDevelopment]</b></span>
+<span style="background-color:#CC0000"><b>-g</b></span>			<span style="background-color:#CC0000"><b>Graphical Mode [InDevelopment]</b></span>
+</pre>
+
 ## Requirements
 ### Minimum
 
