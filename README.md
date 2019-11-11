@@ -1,4 +1,15 @@
 # TClock
+```
+ _______ _____ _            _
+|__   __/ ____| |          | |
+   | | | |    | | ___   ___| | __
+   | | | |    | |/ _ \ / __| |/ /
+   | | | |____| | (_) | (__|   <
+   |_|  \_____|_|\___/ \___|_|\_\
+The Terminal Clock
+MIT License
+Copyright (c) 2019 Haz001
+```
 
 A large digital clock that runs in a terminal. <br/>
 This clock has two main animation methords:
