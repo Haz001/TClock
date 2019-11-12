@@ -34,7 +34,7 @@ This clock has two main animation methords:
 
 no optin		Default settings
 -m			CLI Menu
--g			GitHub Link
+-git			GitHub Link
 
 <span style="background-color:#CC0000"><b>In Development</b></span>
 <span style="background-color:#CC0000"><b>-i</b></span>			<span style="background-color:#CC0000"><b>One Instance (good for &apos;watch&apos; command or just to check time) [InDevelopment]</b></span>
