@@ -1,3 +1,9 @@
+#        _                  
+#   ___ | | __  _ __  _   _ 
+#  / _ \| |/ / | '_ \| | | |
+# | (_) |   < _| |_) | |_| |
+#  \___/|_|\_(_) .__/ \__, |
+#              |_|    |___/ 
 #!/usr/bin/env python3
  #  _______ _____ _            _
  # |__   __/ ____| |          | |
@@ -8,90 +14,23 @@
  # The Terminal Clock
  # MIT License
  # Copyright (c) 2019 Haz001
-<<<<<<< Updated upstream
 import time
 import os
-=======
-
-import time
-import os
-if(os.path.exists("debug")):
-    import menu
->>>>>>> Stashed changes
 import sys
 from time import sleep
 from datetime import datetime as dt
 from sys import platform
 import curses
-<<<<<<< Updated upstream
-=======
 class mode:
     def __init__(self,name,blockstart,blockcent,blockend):
         self.name = name
         self.blockstart = blockstart
         self.blockcent = blockcent
         self.blockend = blockend
->>>>>>> Stashed changes
 class ui:
     invert = False
     title = ""
     block = '\x1b[7;30;39m'+" "+'\x1b[0m'
-<<<<<<< Updated upstream
-    class mode0:
-        blockstart = '\x1b[7;30;39m'
-        blockcent = " "
-        blockend = '\x1b[0m'
-    class mode1:
-        blockstart = ''
-        blockcent = "\u2588"
-        blockend = ''
-
-    class mode2:
-        blockstart = '\x1b[7;30;39m'
-        blockcent = "#"
-        blockend = '\x1b[0m'
-    class mode3:
-        blockstart = '\x1b[7;30;39m'
-        blockcent = "-"
-        blockend = '\x1b[0m'
-    class mode4:
-        blockstart = '\x1b[7;30;39m'
-        blockcent = "/"
-        blockend = '\x1b[0m'
-    class mode5:
-        blockstart = '\x1b[7;30;39m'
-        blockcent = "\\"
-        blockend = '\x1b[0m'
-    class mode6:
-        blockstart = '\x1b[7;30;39m'
-        blockcent = "_"
-        blockend = '\x1b[0m'
-    class mode7:
-        blockstart = '\x1b[7;30;39m'
-        blockcent = "~"
-        blockend = '\x1b[0m'
-    def chngClass(n):
-
-        modex = ui.mode0
-        if(n == 1):
-            modex = ui.mode1
-        elif(n == 2):
-            modex = ui.mode2
-        elif(n == 3):
-            modex = ui.mode3
-        elif(n == 4):
-            modex = ui.mode4
-        elif(n == 5):
-            modex = ui.mode5
-        elif(n == 6):
-            modex = ui.mode6
-        elif(n == 7):
-            modex = ui.mode7
-
-        ui.block = modex.blockstart + modex.blockcent + modex.blockend
-
-
-=======
     modes = { "mode0":
         mode("Space",'\x1b[7;30;39m'," ",'\x1b[0m'),
     "mode1":
@@ -130,7 +69,6 @@ class ui:
         ui.block = modex.blockstart + modex.blockcent + modex.blockend
 
 ui.chngClass(input())
->>>>>>> Stashed changes
 class paths:
     script = None
     name = None
@@ -162,11 +100,6 @@ class grid:
             return self.grid[str(x)+" - "+str(y)]
     def setPix(self,x,y,v):
         self.grid[str(x)+" - "+str(y)] = str(v)
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
     def printGrid(self,t=0):
         for i in range((self.height)):
             s = ""
@@ -174,28 +107,15 @@ class grid:
                 if(ui.invert):
                     if(self.getPix(j,i) == "0"):
                         s+=" "
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
                     else:
                         s+=ui.block
                 else:
                     if(self.getPix(j,i) == "1"):
                         s+=" "
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
                     else:
                         s+=ui.block
             print(s)
             sleep(t)
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
 class number:
     def __init__(self,name,filep=None):
         self.grid = {}
@@ -334,12 +254,6 @@ class fun:
             for x in range(nums.width):
                 for y in range(nums.height):
                     g.setPix((x+3)+((i+4)*(nums.width+2)),y+1,n.getPix(x,y))
-<<<<<<< Updated upstream
-        g.setPix(nums.width*2+4,2,1)
-        g.setPix(nums.width*2+4,6,1)
-        g.setPix(nums.width*4+9,2,1)
-        g.setPix(nums.width*4+9,6,1)
-=======
         if(ui.invert):
             # g.setPix(nums.width*2+4,2,0)
             # g.setPix(nums.width*2+4,6,0)
@@ -351,7 +265,6 @@ class fun:
             g.setPix(nums.width*2+4,6,1)
             g.setPix(nums.width*4+9,2,1)
             g.setPix(nums.width*4+9,6,1)
->>>>>>> Stashed changes
 
 
 
@@ -368,18 +281,11 @@ class fun:
             elif(fun.mnu.scene == 1):
                 msg = "Scroll Menu\n"+cmenu.button(["Slow","Medium","Fast","Custom","Back"],fun.mnu.btnn,True)
             elif(fun.mnu.scene == 2):
-<<<<<<< Updated upstream
-                msg = "Settings Menu\n(Under Development)\n"+cmenu.button(["(Buggy) Invert - "+str(ui.invert),"Back","Quit"],fun.mnu.btnn,True)
-            elif(fun.mnu.scene == 3):
-                msg = cmenu.button(["Back","exit"],fun.mnu.btnn,True)
-
-=======
                 msg = "Settings Menu\n(Under Development)\n"+cmenu.button(["(Buggy) Invert - "+str(ui.invert),"Back"],fun.mnu.btnn,True)
             elif(fun.mnu.scene == 3):
                 msg = cmenu.button(["Back","exit"],fun.mnu.btnn,True)
             elif(fun.mnu.scene == 4):
                 msg = "Mode Menu\n(Under Development)\n"+cmenu.button(["Space","","Back"],fun.mnu.btnn,True)
->>>>>>> Stashed changes
             x = (cmenu.keys(ui.title+msg))
 
             if(fun.mnu.scene == 0):
@@ -413,31 +319,12 @@ class fun:
                     fun.mnu.btnn -= 1
                 elif(x== 'return'):
                     if(fun.mnu.btnn == 0):
-<<<<<<< Updated upstream
-
-
-                        fun.loop(0.2)
-
-                    elif(fun.mnu.btnn == 1):
-
-
-                        fun.loop(0.1)
-                    elif(fun.mnu.btnn == 2):
-
-
-                        fun.loop(0.05)
-
-                    elif(fun.mnu.btnn == 3):
-
-
-=======
                         fun.loop(0.2)
                     elif(fun.mnu.btnn == 1):
                         fun.loop(0.1)
                     elif(fun.mnu.btnn == 2):
                         fun.loop(0.05)
                     elif(fun.mnu.btnn == 3):
->>>>>>> Stashed changes
                         z = True
                         while z:
                             try:
@@ -445,13 +332,7 @@ class fun:
                                 z = False
                             except:
                                 z = True
-<<<<<<< Updated upstream
-
                         fun.loop(a)
-
-=======
-                        fun.loop(a)
->>>>>>> Stashed changes
                     elif(fun.mnu.btnn == 4):
                         fun.mnu.scene = 0
                         fun.mnu.btnn = 0
