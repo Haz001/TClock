@@ -1,4 +1,148 @@
-import curses
+#!/usr/bin/env python3
+ #  _ __ ___   ___ _ __  _   _   _ __  _   _ 
+ # | '_ ` _ \ / _ \ '_ \| | | | | '_ \| | | |
+ # | | | | | |  __/ | | | |_| |_| |_) | |_| |
+ # |_| |_| |_|\___|_| |_|\__,_(_) .__/ \__, |
+ #                              |_|    |___/ 
+ # Menu
+ # MIT License
+ # Copyright (c) 2019 Haz001
+import platform
+if(platform.system() == "Linux"):
+    import curses
+else:
+    print("Basic Menu")
+
+class menu:
+    class scene:
+        def __init__(self,name,title,buttons):
+            self.name = name
+            self.title = title
+            self.element = buttons
+            self.felement = 0
+        def inc(self,n):
+            self.felement += n
+            if (self.felement > len(self.element)-1):
+                self.felement = 0
+            elif(self.felement < 0):
+                self.felement = len(self.element)-1
+    class button:
+        def __init__(self,text,fid):
+            
+            self.text = text
+            self.fid = fid
+    class runner:
+        def __init__(self):
+            pass
+        def run(self,scene):
+            screen = curses.initscr()
+            curses.start_color()
+            curses.noecho()
+            curses.cbreak()
+            screen.keypad(True)
+            x = True
+            while x:
+                self.draw(screen,scene)
+                y = screen.getch()
+                if(y == curses.KEY_DOWN):
+                    scene.inc(1)
+                elif (y == curses.KEY_UP):
+                    scene.inc(-1)
+
+
+                elif((y == curses.KEY_ENTER)or(y == 10)):
+                    x = False
+                    
+                else:
+                    scene.title += (str(y))
+                # if char == curses.KEY_RIGHT:
+#                     return 'right'
+#                 elif char == curses.KEY_LEFT:
+#                     return 'left'
+#                 elif char == curses.KEY_UP:
+#                     return 'up'
+#                 elif char == curses.KEY_DOWN:
+#                     return 'down'
+#                 elif (char == curses.KEY_ENTER) or (char == 10):
+#                     return 'return'
+#                 else:
+#                     print(char)
+#                     return char
+                
+            screen.clear()
+            curses.nocbreak(); screen.keypad(0); curses.echo()
+            curses.endwin()
+            return scene.element[scene.felement].fid
+            
+
+
+        def draw(self,screen,scene):
+           
+            
+            screen.clear()
+            screen.addstr(scene.title)
+            screen.addstr("\n")
+            curses.init_pair(1, curses.COLOR_RED, curses.COLOR_BLACK)
+
+            for i in range(len(scene.element)):
+                screen.addstr("\n")
+                t = "["+scene.element[i].text+"]"
+                if (scene.felement == i):
+                    screen.addstr(">"+t, curses.color_pair(1))
+                else:
+                    screen.addstr(t)
+            screen.addstr("\n")
+            
+            
+        
+        
+    
+
+    
+
+# buttonn = 0
+
+#     def keys(msg):
+#         screen = curses.initscr()
+#         curses.start_color()
+
+#         curses.noecho()
+#         curses.cbreak()
+#         screen.keypad(True)
+#         screen.clear()
+#         x = msg.split("|;")
+#         curses.init_pair(1, curses.COLOR_RED, curses.COLOR_WHITE)
+#         for i in range(len(x)):
+#             if(i%2 == 0):
+#                 screen.addstr(x[i])
+#             else:
+#                 screen.addstr(x[i], curses.color_pair(1))
+#         try:
+#             while True:
+
+#                 char = screen.getch()
+#                 if char == curses.KEY_RIGHT:
+#                     return 'right'
+#                 elif char == curses.KEY_LEFT:
+#                     return 'left'
+#                 elif char == curses.KEY_UP:
+#                     return 'up'
+#                 elif char == curses.KEY_DOWN:
+#                     return 'down'
+#                 elif (char == curses.KEY_ENTER) or (char == 10):
+#                     return 'return'
+#                 else:
+#                     print(char)
+#                     return char
+#         except:
+#             curses.nocbreak(); screen.keypad(0); curses.echo()
+
+#             curses.endwin()
+
+
+#         finally:
+#             curses.nocbreak(); screen.keypad(0); curses.echo()
+#             curses.endwin()
 #!/usr/bin/env python3
  #  _______ _____ _            _
  # |__   __/ ____| |          | |
@@ -12,8 +156,14 @@ import curses
 
 import time
 import os
-if(os.path.exists("debug")):
-    import menu
+debug = os.path.isfile("debug")
+debug = True
+if(debug):
+    from menu import menu
+    print("debug")
+else:
+    print("nodebug")
+
 import sys
 from time import sleep
 from datetime import datetime as dt
@@ -66,7 +216,7 @@ class ui:
 
         ui.block = modex.blockstart + modex.blockcent + modex.blockend
 
-ui.chngClass(input())
+ui.chngClass(0)
 class paths:
     script = None
     name = None
@@ -90,8 +240,11 @@ class grid:
         self.height = h
         for x in range(self.width):
             for y in range(self.height):
-
+                
+                
+                
                 self.grid[str(x)+" - "+str(y)] = 0
+                
 
     def getPix(self, x,y):
         if(str(x)+" - "+str(y)) in self.grid:
@@ -103,10 +256,11 @@ class grid:
             s = ""
             for j in range((self.width)):
                 if(ui.invert):
-                    if(self.getPix(j,i) == "0"):
-                        s+=" "
-                    else:
+                    if(self.getPix(j,i) == "1"):
                         s+=ui.block
+                    else:
+                        s+=" "
+                        
                 else:
                     if(self.getPix(j,i) == "1"):
                         s+=" "
@@ -215,19 +369,20 @@ class fun:
         os.system(c)
 
     def loop(t = None):
+        g = grid(nums.width*6+14,nums.height+2)
         sec = ""
         while True:
             if (str(dt.now().second) != sec):
                 sec = str(dt.now().second)
                 if(t == None):
                     fun.clear()
-                    fun.draw()
+                    fun.draw(g)
                 else:
-                    fun.draw(t)
+                    fun.draw(g,t)
             time.sleep(0.01)
 
-    def draw(t = 0):
-        g = grid(nums.width*6+14,nums.height+2)
+    def draw(g,t = 0):
+        
         h = str(dt.now().hour)
         while(len(h)<2):
             h = "0"+h
@@ -252,112 +407,79 @@ class fun:
             for x in range(nums.width):
                 for y in range(nums.height):
                     g.setPix((x+3)+((i+4)*(nums.width+2)),y+1,n.getPix(x,y))
-        if(ui.invert):
-            # g.setPix(nums.width*2+4,2,0)
-            # g.setPix(nums.width*2+4,6,0)
-            # g.setPix(nums.width*4+9,2,0)
-            # g.setPix(nums.width*4+9,6,0)
-            print(">:-@")
-        else:
-            g.setPix(nums.width*2+4,2,1)
-            g.setPix(nums.width*2+4,6,1)
-            g.setPix(nums.width*4+9,2,1)
-            g.setPix(nums.width*4+9,6,1)
+        
+        g.setPix(nums.width*2+4,2,1)
+        g.setPix(nums.width*2+4,6,1)
+        g.setPix(nums.width*4+9,2,1)
+        g.setPix(nums.width*4+9,6,1)
+        
 
-
-
+        
+        
         g.printGrid(t)
     class mnu:
         scene = 0
-        btnn = 0
-        msg = 0
+        
     def menu():
+        mainm = menu.scene("main","Main Menu",[menu.button("Flash (Default)",0),menu.button("Scroll",1),menu.button("Settings",2),menu.button("Quit",3)])
+        scrollm = menu.scene("scroll","Scroll Menu",[menu.button("Slow",4),menu.button("Medium",5),menu.button("Fast",6),menu.button("Custom",7),menu.button("Back",8)])
+        settingm = menu.scene("settings","Settings Menu", [ menu.button("Invert - " + str(ui.invert),9) , menu.button("Back",10) ] )
+        modem = menu.scene("mode","Mode Menu",[menu.button("Spcae",11),menu.button("Back",8)])
+        cmenu = menu.runner()
         while True:
-            msg = ""
+            
+            x = mainm
             if(fun.mnu.scene == 0):
-                msg = "Main Menu\n"+cmenu.button(["Flash (Default)","Scroll","Settings","Quit"],fun.mnu.btnn,True)
+                x = mainm
             elif(fun.mnu.scene == 1):
-                msg = "Scroll Menu\n"+cmenu.button(["Slow","Medium","Fast","Custom","Back"],fun.mnu.btnn,True)
+                x = scrollm
             elif(fun.mnu.scene == 2):
-                msg = "Settings Menu\n(Under Development)\n"+cmenu.button(["(Buggy) Invert - "+str(ui.invert),"Back"],fun.mnu.btnn,True)
+                x = settingm
             elif(fun.mnu.scene == 3):
-                msg = cmenu.button(["Back","exit"],fun.mnu.btnn,True)
-            elif(fun.mnu.scene == 4):
-                msg = "Mode Menu\n(Under Development)\n"+cmenu.button(["Space","","Back"],fun.mnu.btnn,True)
-            x = (cmenu.keys(ui.title+msg))
-
-            if(fun.mnu.scene == 0):
-                if(x == 'down'):
-                    fun.mnu.btnn += 1
-                elif(x == 'up'):
-                    fun.mnu.btnn -= 1
-                elif(x== 'return'):
-                    if(fun.mnu.btnn == 0):
-
-
-                        fun.loop()
-                    elif(fun.mnu.btnn == 1):
-                        fun.mnu.scene = 1
-                        fun.mnu.btnn = 0
-                    elif(fun.mnu.btnn == 2):
-                        fun.mnu.scene = 2
-                        fun.mnu.btnn = 0
-                    elif(fun.mnu.btnn == 3):
-
-
-                        exit()
-                if(fun.mnu.btnn < 0):
-                    fun.mnu.btnn = 3
-                elif(fun.mnu.btnn >3):
-                    fun.mnu.btnn = 0
-            elif(fun.mnu.scene == 1):
-                if(x == 'down'):
-                    fun.mnu.btnn += 1
-                elif(x == 'up'):
-                    fun.mnu.btnn -= 1
-                elif(x== 'return'):
-                    if(fun.mnu.btnn == 0):
-                        fun.loop(0.2)
-                    elif(fun.mnu.btnn == 1):
-                        fun.loop(0.1)
-                    elif(fun.mnu.btnn == 2):
-                        fun.loop(0.05)
-                    elif(fun.mnu.btnn == 3):
+                x = modem
+            y = cmenu.run(x)
+            if(y == 0):
+                fun.loop()
+            elif(y == 1):
+                 fun.mnu.scene = 1
+            elif(y == 2):
+                fun.mnu.scene = 2
+            elif(y == 3):
+                exit(0)
+            elif(y == 4):
+                fun.loop(0.2)
+            elif(y == 5):
+                fun.loop(0.1)
+            elif(y == 6):
+                fun.loop(0.05)
+            elif(y == 7):
+                z = True
+                while z:
+                    try:
+                        a = float(input("Custom Number"))
+                        z = False
+                    except:
                         z = True
-                        while z:
-                            try:
-                                a = float(input("Custom Number"))
-                                z = False
-                            except:
-                                z = True
-                        fun.loop(a)
-                    elif(fun.mnu.btnn == 4):
-                        fun.mnu.scene = 0
-                        fun.mnu.btnn = 0
-                    elif(fun.mnu.btnn == 5):
-                        exit()
+                fun.loop(a)
+            elif(y == 8):
+                fun.mnu.scene = 0
+            elif(y == 9):
+                ui.invert = not (ui.invert)
+                settingm = menu.scene("settings","Settings Menu", [ menu.button("Invert - " + str(ui.invert),9) , menu.button("Back",10) ] )
+            elif(y == 10):
+                fun.mnu.scene = 0
+            
+            #         if(fun.mnu.btnn == 0):
+            #             (ui.invert) = not (ui.invert)
+            #         elif(fun.mnu.btnn == 1):
+            #             fun.mnu.scene = 0
+            #         elif(fun.mnu.btnn == 2):
+            #             exit()
 
-                if(fun.mnu.btnn < 0):
-                    fun.mnu.btnn = 4
-                elif(fun.mnu.btnn >4):
-                    fun.mnu.btnn = 0
-            elif(fun.mnu.scene == 2):
-                if(x == 'down'):
-                    fun.mnu.btnn += 1
-                elif(x == 'up'):
-                    fun.mnu.btnn -= 1
-                elif(x== 'return'):
-                    if(fun.mnu.btnn == 0):
-                        (ui.invert) = not (ui.invert)
-                    elif(fun.mnu.btnn == 1):
-                        fun.mnu.scene = 0
-                    elif(fun.mnu.btnn == 2):
-                        exit()
-
-                if(fun.mnu.btnn < 0):
-                    fun.mnu.btnn = 1
-                elif(fun.mnu.btnn >1):
-                    fun.mnu.btnn = 0
+            #     if(fun.mnu.btnn < 0):
+            #         fun.mnu.btnn = 1
+            #     elif(fun.mnu.btnn >1):
+            #         fun.mnu.btnn = 0
     def default():
         fun.loop()
         input()
@@ -373,67 +495,68 @@ class fun:
         print(t)
     def inst():
         fun.draw()
-class cmenu():
-    buttonn = 0
+# class cmenu():
+#     buttonn = 0
 
-    def keys(msg):
-        screen = curses.initscr()
-        curses.start_color()
+#     def keys(msg):
+#         screen = curses.initscr()
+#         curses.start_color()
 
-        curses.noecho()
-        curses.cbreak()
-        screen.keypad(True)
-        screen.clear()
-        x = msg.split("|;")
-        curses.init_pair(1, curses.COLOR_RED, curses.COLOR_WHITE)
-        for i in range(len(x)):
-            if(i%2 == 0):
-                screen.addstr(x[i])
-            else:
-                screen.addstr(x[i], curses.color_pair(1))
-        try:
-            while True:
+#         curses.noecho()
+#         curses.cbreak()
+#         screen.keypad(True)
+#         screen.clear()
+#         x = msg.split("|;")
+#         curses.init_pair(1, curses.COLOR_RED, curses.COLOR_WHITE)
+#         for i in range(len(x)):
+#             if(i%2 == 0):
+#                 screen.addstr(x[i])
+#             else:
+#                 screen.addstr(x[i], curses.color_pair(1))
+#         try:
+#             while True:
 
-                char = screen.getch()
-                if char == curses.KEY_RIGHT:
-                    return 'right'
-                elif char == curses.KEY_LEFT:
-                    return 'left'
-                elif char == curses.KEY_UP:
-                    return 'up'
-                elif char == curses.KEY_DOWN:
-                    return 'down'
-                elif (char == curses.KEY_ENTER) or (char == 10):
-                    return 'return'
-                else:
-                    print(char)
-                    return char
-        except:
-            curses.nocbreak(); screen.keypad(0); curses.echo()
+#                 char = screen.getch()
+#                 if char == curses.KEY_RIGHT:
+#                     return 'right'
+#                 elif char == curses.KEY_LEFT:
+#                     return 'left'
+#                 elif char == curses.KEY_UP:
+#                     return 'up'
+#                 elif char == curses.KEY_DOWN:
+#                     return 'down'
+#                 elif (char == curses.KEY_ENTER) or (char == 10):
+#                     return 'return'
+#                 else:
+#                     print(char)
+#                     return char
+#         except:
+#             curses.nocbreak(); screen.keypad(0); curses.echo()
 
-            curses.endwin()
-
-
-        finally:
-            curses.nocbreak(); screen.keypad(0); curses.echo()
-            curses.endwin()
+#             curses.endwin()
 
 
-    def button(blst, actn,btbl = False):
-        rets = ""
-        for i in range(len(blst)):
-            if i != actn:
-                rets += "[ "+blst[i]+" ]"
-            elif i == actn:
-                rets += "|;[ "+blst[i]+" ]|;"
-            if btbl:
-                rets+="\n"
-        return rets
+#         finally:
+#             curses.nocbreak(); screen.keypad(0); curses.echo()
+#             curses.endwin()
+
+
+#     def button(blst, actn,btbl = False):
+#         rets = ""
+#         for i in range(len(blst)):
+#             if i != actn:
+#                 rets += "[ "+blst[i]+" ]"
+#             elif i == actn:
+#                 rets += "|;[ "+blst[i]+" ]|;"
+#             if btbl:
+#                 rets+="\n"
+#         return rets
 # home = str(Path.home())
 # conf = home+"/.config/tClock/"
 
 args = (sys.argv)
 print(args)
+ui.invert = False
 if (len(args) == 1):
     fun.default()
 elif(len(args) == 2):

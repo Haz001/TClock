@@ -1,1 +1,1 @@
-/usr/share/tclock/tclock.py
+/usr/share/tclock/main.py ${@:1:99}

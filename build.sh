@@ -6,7 +6,7 @@
 	echo "[2/5] - deleting debug flag"
 	rm tclock-deb/usr/share/tclock/debug
 	echo "[3/5] - making python executable"
-	chmod 771 tclock-deb/usr/share/tclock/tclock.py
+	chmod 777 tclock-deb/usr/share/tclock/main.py
 	echo "[4/5] - Packaging For Debian"
 	dpkg --build tclock-deb
 	echo "[5/5] - Done"

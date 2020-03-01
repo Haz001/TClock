@@ -8,90 +8,32 @@
  # The Terminal Clock
  # MIT License
  # Copyright (c) 2019 Haz001
-<<<<<<< Updated upstream
-import time
-import os
-=======
 
 import time
 import os
-if(os.path.exists("debug")):
-    import menu
->>>>>>> Stashed changes
+debug = os.path.isfile("debug")
+debug = True
+if(debug):
+    from menu import menu
+    print("debug")
+else:
+    print("nodebug")
+
 import sys
 from time import sleep
 from datetime import datetime as dt
 from sys import platform
 import curses
-<<<<<<< Updated upstream
-=======
 class mode:
     def __init__(self,name,blockstart,blockcent,blockend):
         self.name = name
         self.blockstart = blockstart
         self.blockcent = blockcent
         self.blockend = blockend
->>>>>>> Stashed changes
 class ui:
     invert = False
     title = ""
     block = '\x1b[7;30;39m'+" "+'\x1b[0m'
-<<<<<<< Updated upstream
-    class mode0:
-        blockstart = '\x1b[7;30;39m'
-        blockcent = " "
-        blockend = '\x1b[0m'
-    class mode1:
-        blockstart = ''
-        blockcent = "\u2588"
-        blockend = ''
-
-    class mode2:
-        blockstart = '\x1b[7;30;39m'
-        blockcent = "#"
-        blockend = '\x1b[0m'
-    class mode3:
-        blockstart = '\x1b[7;30;39m'
-        blockcent = "-"
-        blockend = '\x1b[0m'
-    class mode4:
-        blockstart = '\x1b[7;30;39m'
-        blockcent = "/"
-        blockend = '\x1b[0m'
-    class mode5:
-        blockstart = '\x1b[7;30;39m'
-        blockcent = "\\"
-        blockend = '\x1b[0m'
-    class mode6:
-        blockstart = '\x1b[7;30;39m'
-        blockcent = "_"
-        blockend = '\x1b[0m'
-    class mode7:
-        blockstart = '\x1b[7;30;39m'
-        blockcent = "~"
-        blockend = '\x1b[0m'
-    def chngClass(n):
-
-        modex = ui.mode0
-        if(n == 1):
-            modex = ui.mode1
-        elif(n == 2):
-            modex = ui.mode2
-        elif(n == 3):
-            modex = ui.mode3
-        elif(n == 4):
-            modex = ui.mode4
-        elif(n == 5):
-            modex = ui.mode5
-        elif(n == 6):
-            modex = ui.mode6
-        elif(n == 7):
-            modex = ui.mode7
-
-        ui.block = modex.blockstart + modex.blockcent + modex.blockend
-
-
-=======
     modes = { "mode0":
         mode("Space",'\x1b[7;30;39m'," ",'\x1b[0m'),
     "mode1":
@@ -129,8 +71,7 @@ class ui:
 
         ui.block = modex.blockstart + modex.blockcent + modex.blockend
 
-ui.chngClass(input())
->>>>>>> Stashed changes
+ui.chngClass(0)
 class paths:
     script = None
     name = None
@@ -154,48 +95,34 @@ class grid:
         self.height = h
         for x in range(self.width):
             for y in range(self.height):
-
+                
+                
+                
                 self.grid[str(x)+" - "+str(y)] = 0
+                
 
     def getPix(self, x,y):
         if(str(x)+" - "+str(y)) in self.grid:
             return self.grid[str(x)+" - "+str(y)]
     def setPix(self,x,y,v):
         self.grid[str(x)+" - "+str(y)] = str(v)
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
     def printGrid(self,t=0):
         for i in range((self.height)):
             s = ""
             for j in range((self.width)):
                 if(ui.invert):
-                    if(self.getPix(j,i) == "0"):
-                        s+=" "
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
-                    else:
+                    if(self.getPix(j,i) == "1"):
                         s+=ui.block
+                    else:
+                        s+=" "
+                        
                 else:
                     if(self.getPix(j,i) == "1"):
                         s+=" "
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
                     else:
                         s+=ui.block
             print(s)
             sleep(t)
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
 class number:
     def __init__(self,name,filep=None):
         self.grid = {}
@@ -297,19 +224,20 @@ class fun:
         os.system(c)
 
     def loop(t = None):
+        g = grid(nums.width*6+14,nums.height+2)
         sec = ""
         while True:
             if (str(dt.now().second) != sec):
                 sec = str(dt.now().second)
                 if(t == None):
                     fun.clear()
-                    fun.draw()
+                    fun.draw(g)
                 else:
-                    fun.draw(t)
+                    fun.draw(g,t)
             time.sleep(0.01)
 
-    def draw(t = 0):
-        g = grid(nums.width*6+14,nums.height+2)
+    def draw(g,t = 0):
+        
         h = str(dt.now().hour)
         while(len(h)<2):
             h = "0"+h
@@ -334,151 +262,79 @@ class fun:
             for x in range(nums.width):
                 for y in range(nums.height):
                     g.setPix((x+3)+((i+4)*(nums.width+2)),y+1,n.getPix(x,y))
-<<<<<<< Updated upstream
+        
         g.setPix(nums.width*2+4,2,1)
         g.setPix(nums.width*2+4,6,1)
         g.setPix(nums.width*4+9,2,1)
         g.setPix(nums.width*4+9,6,1)
-=======
-        if(ui.invert):
-            # g.setPix(nums.width*2+4,2,0)
-            # g.setPix(nums.width*2+4,6,0)
-            # g.setPix(nums.width*4+9,2,0)
-            # g.setPix(nums.width*4+9,6,0)
-            print(">:-@")
-        else:
-            g.setPix(nums.width*2+4,2,1)
-            g.setPix(nums.width*2+4,6,1)
-            g.setPix(nums.width*4+9,2,1)
-            g.setPix(nums.width*4+9,6,1)
->>>>>>> Stashed changes
+        
 
-
-
+        
+        
         g.printGrid(t)
     class mnu:
         scene = 0
-        btnn = 0
-        msg = 0
+        
     def menu():
+        mainm = menu.scene("main","Main Menu",[menu.button("Flash (Default)",0),menu.button("Scroll",1),menu.button("Settings",2),menu.button("Quit",3)])
+        scrollm = menu.scene("scroll","Scroll Menu",[menu.button("Slow",4),menu.button("Medium",5),menu.button("Fast",6),menu.button("Custom",7),menu.button("Back",8)])
+        settingm = menu.scene("settings","Settings Menu", [ menu.button("Invert - " + str(ui.invert),9) , menu.button("Back",10) ] )
+        modem = menu.scene("mode","Mode Menu",[menu.button("Spcae",11),menu.button("Back",8)])
+        cmenu = menu.runner()
         while True:
-            msg = ""
+            
+            x = mainm
             if(fun.mnu.scene == 0):
-                msg = "Main Menu\n"+cmenu.button(["Flash (Default)","Scroll","Settings","Quit"],fun.mnu.btnn,True)
+                x = mainm
             elif(fun.mnu.scene == 1):
-                msg = "Scroll Menu\n"+cmenu.button(["Slow","Medium","Fast","Custom","Back"],fun.mnu.btnn,True)
+                x = scrollm
             elif(fun.mnu.scene == 2):
-<<<<<<< Updated upstream
-                msg = "Settings Menu\n(Under Development)\n"+cmenu.button(["(Buggy) Invert - "+str(ui.invert),"Back","Quit"],fun.mnu.btnn,True)
+                x = settingm
             elif(fun.mnu.scene == 3):
-                msg = cmenu.button(["Back","exit"],fun.mnu.btnn,True)
-
-=======
-                msg = "Settings Menu\n(Under Development)\n"+cmenu.button(["(Buggy) Invert - "+str(ui.invert),"Back"],fun.mnu.btnn,True)
-            elif(fun.mnu.scene == 3):
-                msg = cmenu.button(["Back","exit"],fun.mnu.btnn,True)
-            elif(fun.mnu.scene == 4):
-                msg = "Mode Menu\n(Under Development)\n"+cmenu.button(["Space","","Back"],fun.mnu.btnn,True)
->>>>>>> Stashed changes
-            x = (cmenu.keys(ui.title+msg))
-
-            if(fun.mnu.scene == 0):
-                if(x == 'down'):
-                    fun.mnu.btnn += 1
-                elif(x == 'up'):
-                    fun.mnu.btnn -= 1
-                elif(x== 'return'):
-                    if(fun.mnu.btnn == 0):
-
-
-                        fun.loop()
-                    elif(fun.mnu.btnn == 1):
-                        fun.mnu.scene = 1
-                        fun.mnu.btnn = 0
-                    elif(fun.mnu.btnn == 2):
-                        fun.mnu.scene = 2
-                        fun.mnu.btnn = 0
-                    elif(fun.mnu.btnn == 3):
-
-
-                        exit()
-                if(fun.mnu.btnn < 0):
-                    fun.mnu.btnn = 3
-                elif(fun.mnu.btnn >3):
-                    fun.mnu.btnn = 0
-            elif(fun.mnu.scene == 1):
-                if(x == 'down'):
-                    fun.mnu.btnn += 1
-                elif(x == 'up'):
-                    fun.mnu.btnn -= 1
-                elif(x== 'return'):
-                    if(fun.mnu.btnn == 0):
-<<<<<<< Updated upstream
-
-
-                        fun.loop(0.2)
-
-                    elif(fun.mnu.btnn == 1):
-
-
-                        fun.loop(0.1)
-                    elif(fun.mnu.btnn == 2):
-
-
-                        fun.loop(0.05)
-
-                    elif(fun.mnu.btnn == 3):
-
-
-=======
-                        fun.loop(0.2)
-                    elif(fun.mnu.btnn == 1):
-                        fun.loop(0.1)
-                    elif(fun.mnu.btnn == 2):
-                        fun.loop(0.05)
-                    elif(fun.mnu.btnn == 3):
->>>>>>> Stashed changes
+                x = modem
+            y = cmenu.run(x)
+            if(y == 0):
+                fun.loop()
+            elif(y == 1):
+                 fun.mnu.scene = 1
+            elif(y == 2):
+                fun.mnu.scene = 2
+            elif(y == 3):
+                exit(0)
+            elif(y == 4):
+                fun.loop(0.2)
+            elif(y == 5):
+                fun.loop(0.1)
+            elif(y == 6):
+                fun.loop(0.05)
+            elif(y == 7):
+                z = True
+                while z:
+                    try:
+                        a = float(input("Custom Number"))
+                        z = False
+                    except:
                         z = True
-                        while z:
-                            try:
-                                a = float(input("Custom Number"))
-                                z = False
-                            except:
-                                z = True
-<<<<<<< Updated upstream
+                fun.loop(a)
+            elif(y == 8):
+                fun.mnu.scene = 0
+            elif(y == 9):
+                ui.invert = not (ui.invert)
+                settingm = menu.scene("settings","Settings Menu", [ menu.button("Invert - " + str(ui.invert),9) , menu.button("Back",10) ] )
+            elif(y == 10):
+                fun.mnu.scene = 0
+            
+            #         if(fun.mnu.btnn == 0):
+            #             (ui.invert) = not (ui.invert)
+            #         elif(fun.mnu.btnn == 1):
+            #             fun.mnu.scene = 0
+            #         elif(fun.mnu.btnn == 2):
+            #             exit()
 
-                        fun.loop(a)
-
-=======
-                        fun.loop(a)
->>>>>>> Stashed changes
-                    elif(fun.mnu.btnn == 4):
-                        fun.mnu.scene = 0
-                        fun.mnu.btnn = 0
-                    elif(fun.mnu.btnn == 5):
-                        exit()
-
-                if(fun.mnu.btnn < 0):
-                    fun.mnu.btnn = 4
-                elif(fun.mnu.btnn >4):
-                    fun.mnu.btnn = 0
-            elif(fun.mnu.scene == 2):
-                if(x == 'down'):
-                    fun.mnu.btnn += 1
-                elif(x == 'up'):
-                    fun.mnu.btnn -= 1
-                elif(x== 'return'):
-                    if(fun.mnu.btnn == 0):
-                        (ui.invert) = not (ui.invert)
-                    elif(fun.mnu.btnn == 1):
-                        fun.mnu.scene = 0
-                    elif(fun.mnu.btnn == 2):
-                        exit()
-
-                if(fun.mnu.btnn < 0):
-                    fun.mnu.btnn = 1
-                elif(fun.mnu.btnn >1):
-                    fun.mnu.btnn = 0
+            #     if(fun.mnu.btnn < 0):
+            #         fun.mnu.btnn = 1
+            #     elif(fun.mnu.btnn >1):
+            #         fun.mnu.btnn = 0
     def default():
         fun.loop()
         input()
@@ -494,67 +350,68 @@ class fun:
         print(t)
     def inst():
         fun.draw()
-class cmenu():
-    buttonn = 0
+# class cmenu():
+#     buttonn = 0
 
-    def keys(msg):
-        screen = curses.initscr()
-        curses.start_color()
+#     def keys(msg):
+#         screen = curses.initscr()
+#         curses.start_color()
 
-        curses.noecho()
-        curses.cbreak()
-        screen.keypad(True)
-        screen.clear()
-        x = msg.split("|;")
-        curses.init_pair(1, curses.COLOR_RED, curses.COLOR_WHITE)
-        for i in range(len(x)):
-            if(i%2 == 0):
-                screen.addstr(x[i])
-            else:
-                screen.addstr(x[i], curses.color_pair(1))
-        try:
-            while True:
+#         curses.noecho()
+#         curses.cbreak()
+#         screen.keypad(True)
+#         screen.clear()
+#         x = msg.split("|;")
+#         curses.init_pair(1, curses.COLOR_RED, curses.COLOR_WHITE)
+#         for i in range(len(x)):
+#             if(i%2 == 0):
+#                 screen.addstr(x[i])
+#             else:
+#                 screen.addstr(x[i], curses.color_pair(1))
+#         try:
+#             while True:
 
-                char = screen.getch()
-                if char == curses.KEY_RIGHT:
-                    return 'right'
-                elif char == curses.KEY_LEFT:
-                    return 'left'
-                elif char == curses.KEY_UP:
-                    return 'up'
-                elif char == curses.KEY_DOWN:
-                    return 'down'
-                elif (char == curses.KEY_ENTER) or (char == 10):
-                    return 'return'
-                else:
-                    print(char)
-                    return char
-        except:
-            curses.nocbreak(); screen.keypad(0); curses.echo()
+#                 char = screen.getch()
+#                 if char == curses.KEY_RIGHT:
+#                     return 'right'
+#                 elif char == curses.KEY_LEFT:
+#                     return 'left'
+#                 elif char == curses.KEY_UP:
+#                     return 'up'
+#                 elif char == curses.KEY_DOWN:
+#                     return 'down'
+#                 elif (char == curses.KEY_ENTER) or (char == 10):
+#                     return 'return'
+#                 else:
+#                     print(char)
+#                     return char
+#         except:
+#             curses.nocbreak(); screen.keypad(0); curses.echo()
 
-            curses.endwin()
-
-
-        finally:
-            curses.nocbreak(); screen.keypad(0); curses.echo()
-            curses.endwin()
+#             curses.endwin()
 
 
-    def button(blst, actn,btbl = False):
-        rets = ""
-        for i in range(len(blst)):
-            if i != actn:
-                rets += "[ "+blst[i]+" ]"
-            elif i == actn:
-                rets += "|;[ "+blst[i]+" ]|;"
-            if btbl:
-                rets+="\n"
-        return rets
+#         finally:
+#             curses.nocbreak(); screen.keypad(0); curses.echo()
+#             curses.endwin()
+
+
+#     def button(blst, actn,btbl = False):
+#         rets = ""
+#         for i in range(len(blst)):
+#             if i != actn:
+#                 rets += "[ "+blst[i]+" ]"
+#             elif i == actn:
+#                 rets += "|;[ "+blst[i]+" ]|;"
+#             if btbl:
+#                 rets+="\n"
+#         return rets
 # home = str(Path.home())
 # conf = home+"/.config/tClock/"
 
 args = (sys.argv)
 print(args)
+ui.invert = False
 if (len(args) == 1):
     fun.default()
 elif(len(args) == 2):
