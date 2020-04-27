@@ -10,6 +10,7 @@ The Terminal Clock
 MIT License
 Copyright (c) 2019 Haz001
 ```
+Version 1.1
 
 A large digital clock that runs in a terminal. <br/>
 This clock has two main animation methords:
@@ -21,12 +22,20 @@ This clock has two main animation methords:
 ## ToDo
 - [x] Displays time
 - [x] CLI menu
-- [x] Argument management
+- [x] Single argument management
 - [x] Help
-- [ ] One Instance
-- [ ] Write out to file
-- [ ] Count down
+- [x] Saving Settings
+- [ ] Multi argument management
+- [ ] Man file
+- [ ] One Instance option
+- [ ] Windows version, currently using curses module that doesn't exist in Windows, will add windows friendly menu
+- [ ] Write out to file, so you don't have to use ```tclock -i >> filename```
+- [ ] Multiple types of frames
+- [ ] Mutliple font sizes, small, medium and large
+- [ ] Count down, takes a date and counts down to it
 - [ ] Graphical Mode
+
+<progress value="5" max="14">35.7%</progress>
 
 ## Help
 
@@ -48,16 +57,16 @@ no optin		Default settings
 
 - Width - 81 characters
 - Heights - 14 characters
-- python3.x installed
-- 3709 bytes free
+- python3.6 installed
+- 83658 bytes free
 - 17.9 MiB of RAM free
 
 
-### Recomended
+### Recomended (been tested on)
 
 - Width - 81 characters
 - Heights - 14 characters
-- Python3.6.7 installed
+- Python3.7.5 installed
 - 1 MiB free
 - 1 GiB of RAM free
 - GNU/Linux
@@ -83,9 +92,11 @@ no optin		Default settings
   <li>Watch it for a couple seconds to a couple years.</li>
 </ol>
 
+<!--
 ## How to get the most out of this clock (windows)
 
 <ol>
   <li>Install python3.x from <a href="https://www.python.org/downloads/release/python-372/">python.org</a>.</li>
   <li>Double click the python file and then when cmd opens it press F11 to go fullscreen</li>
 </ol>
+-->
