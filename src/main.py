@@ -143,6 +143,188 @@ class menu:
 #         finally:
 #             curses.nocbreak(); screen.keypad(0); curses.echo()
 #             curses.endwin()
+ #   ____ ___  _   _ _____ ___ ____
+ #  / ___/ _ \| \ | |  ___|_ _/ ___|  _ __  _   _
+ # | |  | | | |  \| | |_   | | |  _  | '_ \| | | |
+ # | |__| |_| | |\  |  _|  | | |_| |_| |_) | |_| |
+ #  \____\___/|_| \_|_|   |___\____(_) .__/ \__, |
+ #                                   |_|    |___/
+ # Config Class
+ # MIT License
+ # Copyright (c) 2020 Haz001
+
+from pathlib import Path
+import os
+class config:
+
+    home = str(Path.home())
+    def __init__(self, cf, reado=True):
+
+        self.path = self.home+"/.config/tclock/"+cf+".conf"
+        self.reado = reado
+        self.sr = self.stream(self.path,reado)
+
+    def get(self, name):
+        f = self.sr.read(name)
+
+        if(f == None):
+            return None
+        else:
+            if (f[0] == None):
+                return None
+            else:
+                return f[0]
+    def type(self, name):
+        f = self.sr.read(name)
+        if (len(f)<2):
+            return None
+        else:
+            return f[1]
+    def set(self, name, value):
+        if(self.reado):
+            pass
+        else:
+            self.sr.write(str(name),str(value))
+    def praw(self):
+        f = open(self.path,'r')
+        txt = f.read()
+        return str(self.sr.uncomp())
+    class stream:
+        def __init__(self,cpath,readonly):
+            y = Path(cpath)
+
+            if(y.exists()):
+                self.cpath = cpath
+                self.reado = readonly
+                x = open(cpath,'r')
+                self.data = x.read()
+                x.close()
+            else:
+                z = cpath.split("/")
+
+                for i in range(len(z)+1):
+
+                    a = "/".join(z[:(i)])
+                    if(i == len(z)):
+                        if(not Path(a).is_file()):
+
+                            open(a,'w').close()
+                    else:
+                        if( not Path(a).is_dir()):
+
+                            os.mkdir(a)
+
+
+                self.cpath = cpath
+                self.reado = readonly
+                x = open(cpath)
+                self.data = x.read()
+                x.close()
+
+
+        def uncomp(self):
+            data = self.data
+            result = ""
+            part = 0 ## 0 - name,1 - value,  2 - type
+            count = 0
+            quotes = False
+            name = {}
+            tname = ""
+            value = {}
+            tvalue = ""
+            t = {}
+            tt = ""
+            lstchr = ""
+            for i in range(len(data)):
+                cchar = data[i]
+                if(quotes):
+                    if((cchar=="\"")and not(lstchr == "\\")):
+                        quotes = False
+                    else:
+                        if (part == 0):
+                            tname += data[i]
+                        elif (part == 1):
+                            tvalue += data[i]
+                        elif (part == 2):
+                            tt += data[i]
+                else:
+                    if((cchar=="\n")or(cchar=="\r")):
+                        part = 0
+                        name[count] = tname
+                        tname = ""
+                        value[count] = tvalue
+                        tvalue = ""
+                        if((tt == "")or(tt == None)):
+                            tt = "s"
+                        t[count] = tt
+                        tt = ""
+                        count += 1
+                    elif((cchar==":")):
+                        part += 1
+                    elif(cchar=="\""):
+                        quotes = True
+                lstchr = cchar
+            result = (name, value, t)
+            dic = {}
+            for i in range(count):
+                if((name[i] != None)and(name[i] != None)):
+                    if(t[i] == ""):
+                        dic[name[i]] = [value[i]]
+                    else:
+                        dic[name[i]] = [value[i],t[i]]
+            result = dic
+            return result
+        def read(self,name):
+            x = self.uncomp()
+            result = ""
+            if(name in x):
+                result = x[name]
+            else:
+                result = None
+            return result
+        def write(self,name,value):
+            dic = self.uncomp()
+            result = ""
+            if(name in dic): ## This might be used later, don't optimize yet.
+                dic[name] = value
+            else:
+                dic[name] = value
+            x = [ [k,v] for k, v in dic.items() ] ## convets dictionary to list
+            lname = []
+            lvalue = []
+            for i in range(len(x)):
+                lname.append(x[i][0])
+                lvalue.append(x[i][1])
+
+            txt = ""
+            for i in range(len(lname)):
+                if not((lname[i] == "")and(lvalue[i] == "")):
+                    txt+=str("\""+str(lname[i])+"\":\""+str(lvalue[i])+"\"\n")
+            self.data = txt
+            f = open(self.cpath,'w')
+            f.write(txt)
+            f.close()
+# NOTE: Simple test to see if it can write and read values
+def test(self = None):
+    x = config("testfile",False)
+    import random
+    try:
+        y = str(random.randint(0,65535))
+        x.set("testvalue",str(y))
+        z = x.get("testvalue")
+        if(z == y):
+            pass
+        else:
+            print("Error with Config.py\nInit Test Failed.\nExpecting '"+y+"' as '"+str(type(y))+"' but got '"+z+"' as '"+str(type(z))+"'")
+            exit()
+    except OSError as e:
+        print("OS error: "+str(e))
+        exit()
+    finally:
+        del x
+        del y
+        del z
+test()
 #!/usr/bin/env python3
  #  _______ _____ _            _
  # |__   __/ ____| |          | |
@@ -154,15 +336,17 @@ class menu:
  # MIT License
  # Copyright (c) 2019 Haz001
 
+from pathlib import Path
 import time
 import os
 debug = os.path.isfile("debug")
 debug = True
 if(debug):
     from menu import menu
+    from config import config
     print("debug")
 else:
-    print("nodebug")
+    pass
 
 import sys
 from time import sleep
@@ -220,6 +404,16 @@ ui.chngClass(0)
 class paths:
     script = None
     name = None
+    def type(filename):
+        x = Path(filename)
+        if(x.is_file()):
+            return "file" # it is a file
+        elif(x.is_dir()):
+            return "dir"  # it is a directory
+        elif(x.exists()):
+            return "unkn" # something is there, unknown (may be unaccessible)
+        else:
+            return "none" # nothing is there
     def getScript():
         y  = ""
         if(paths.script == None):
@@ -230,6 +424,7 @@ class paths:
         else:
             y = paths.script
         return y
+
 x = open(paths.getScript()+"data/title",'r')
 ui.title = x.read()
 x.close()
@@ -240,11 +435,11 @@ class grid:
         self.height = h
         for x in range(self.width):
             for y in range(self.height):
-                
-                
-                
+
+
+
                 self.grid[str(x)+" - "+str(y)] = 0
-                
+
 
     def getPix(self, x,y):
         if(str(x)+" - "+str(y)) in self.grid:
@@ -260,7 +455,7 @@ class grid:
                         s+=ui.block
                     else:
                         s+=" "
-                        
+
                 else:
                     if(self.getPix(j,i) == "1"):
                         s+=" "
@@ -270,6 +465,7 @@ class grid:
             sleep(t)
 class number:
     def __init__(self,name,filep=None):
+
         self.grid = {}
         self.Name = None
         self.height = 7
@@ -382,7 +578,7 @@ class fun:
             time.sleep(0.01)
 
     def draw(g,t = 0):
-        
+
         h = str(dt.now().hour)
         while(len(h)<2):
             h = "0"+h
@@ -407,19 +603,19 @@ class fun:
             for x in range(nums.width):
                 for y in range(nums.height):
                     g.setPix((x+3)+((i+4)*(nums.width+2)),y+1,n.getPix(x,y))
-        
+
         g.setPix(nums.width*2+4,2,1)
         g.setPix(nums.width*2+4,6,1)
         g.setPix(nums.width*4+9,2,1)
         g.setPix(nums.width*4+9,6,1)
-        
 
-        
-        
+
+
+
         g.printGrid(t)
     class mnu:
         scene = 0
-        
+
     def menu():
         mainm = menu.scene("main","Main Menu",[menu.button("Flash (Default)",0),menu.button("Scroll",1),menu.button("Settings",2),menu.button("Quit",3)])
         scrollm = menu.scene("scroll","Scroll Menu",[menu.button("Slow",4),menu.button("Medium",5),menu.button("Fast",6),menu.button("Custom",7),menu.button("Back",8)])
@@ -427,7 +623,7 @@ class fun:
         modem = menu.scene("mode","Mode Menu",[menu.button("Spcae",11),menu.button("Back",8)])
         cmenu = menu.runner()
         while True:
-            
+
             x = mainm
             if(fun.mnu.scene == 0):
                 x = mainm
@@ -465,21 +661,12 @@ class fun:
                 fun.mnu.scene = 0
             elif(y == 9):
                 ui.invert = not (ui.invert)
+                x = config("settings",False)
+
+                x.set("invert",str(ui.invert).lower())
                 settingm = menu.scene("settings","Settings Menu", [ menu.button("Invert - " + str(ui.invert),9) , menu.button("Back",10) ] )
             elif(y == 10):
                 fun.mnu.scene = 0
-            
-            #         if(fun.mnu.btnn == 0):
-            #             (ui.invert) = not (ui.invert)
-            #         elif(fun.mnu.btnn == 1):
-            #             fun.mnu.scene = 0
-            #         elif(fun.mnu.btnn == 2):
-            #             exit()
-
-            #     if(fun.mnu.btnn < 0):
-            #         fun.mnu.btnn = 1
-            #     elif(fun.mnu.btnn >1):
-            #         fun.mnu.btnn = 0
     def default():
         fun.loop()
         input()
@@ -495,68 +682,31 @@ class fun:
         print(t)
     def inst():
         fun.draw()
-# class cmenu():
-#     buttonn = 0
-
-#     def keys(msg):
-#         screen = curses.initscr()
-#         curses.start_color()
-
-#         curses.noecho()
-#         curses.cbreak()
-#         screen.keypad(True)
-#         screen.clear()
-#         x = msg.split("|;")
-#         curses.init_pair(1, curses.COLOR_RED, curses.COLOR_WHITE)
-#         for i in range(len(x)):
-#             if(i%2 == 0):
-#                 screen.addstr(x[i])
-#             else:
-#                 screen.addstr(x[i], curses.color_pair(1))
-#         try:
-#             while True:
-
-#                 char = screen.getch()
-#                 if char == curses.KEY_RIGHT:
-#                     return 'right'
-#                 elif char == curses.KEY_LEFT:
-#                     return 'left'
-#                 elif char == curses.KEY_UP:
-#                     return 'up'
-#                 elif char == curses.KEY_DOWN:
-#                     return 'down'
-#                 elif (char == curses.KEY_ENTER) or (char == 10):
-#                     return 'return'
-#                 else:
-#                     print(char)
-#                     return char
-#         except:
-#             curses.nocbreak(); screen.keypad(0); curses.echo()
-
-#             curses.endwin()
+    def getFileOptions():
+        x = config("settings",False)
+        y = x.get("display")
+        if (y == None):
+            x.set("display","default")
+        else:
+            pass
+        del y
+        y = x.get("invert")
+        if (y == None):
+            x.set("invert","false")
+            ui.invert = False
+        else:
+            
+            if(y == "true"):
+                ui.invert = True
+            else:
+                ui.invert = False
 
 
-#         finally:
-#             curses.nocbreak(); screen.keypad(0); curses.echo()
-#             curses.endwin()
 
-
-#     def button(blst, actn,btbl = False):
-#         rets = ""
-#         for i in range(len(blst)):
-#             if i != actn:
-#                 rets += "[ "+blst[i]+" ]"
-#             elif i == actn:
-#                 rets += "|;[ "+blst[i]+" ]|;"
-#             if btbl:
-#                 rets+="\n"
-#         return rets
-# home = str(Path.home())
-# conf = home+"/.config/tClock/"
-
+fun.getFileOptions()
 args = (sys.argv)
-print(args)
-ui.invert = False
+
+
 if (len(args) == 1):
     fun.default()
 elif(len(args) == 2):
