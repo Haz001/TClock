@@ -1,25 +1,23 @@
 #!/usr/bin/env python3
-#  _______ _____ _            _
-# |__   __/ ____| |          | |
-#    | | | |    | | ___   ___| | __
-#    | | | |    | |/ _ \ / __| |/ /
-#    | | | |____| | (_) | (__|   <
-#    |_|  \_____|_|\___/ \___|_|\_\
-# The Terminal Clock
-# MIT License
-# Copyright (c) 2019 Haz001
+ #  _______ _____ _            _
+ # |__   __/ ____| |          | |
+ #    | | | |    | | ___   ___| | __
+ #    | | | |    | |/ _ \ / __| |/ /
+ #    | | | |____| | (_) | (__|   <
+ #    |_|  \_____|_|\___/ \___|_|\_\
+ # The Terminal Clock
+ # MIT License
+ # Copyright (c) 2019 Haz001
 
-from pathlib import Path
 import time
 import os
 debug = os.path.isfile("debug")
 debug = True
 if(debug):
     from menu import menu
-    from config import config
     print("debug")
 else:
-    pass
+    print("nodebug")
 
 import sys
 from time import sleep
@@ -77,16 +75,6 @@ ui.chngClass(0)
 class paths:
     script = None
     name = None
-    def type(filename):
-        x = Path(filename)
-        if(x.is_file()):
-            return "file" # it is a file
-        elif(x.is_dir()):
-            return "dir"  # it is a directory
-        elif(x.exists()):
-            return "unkn" # something is there, unknown (may be unaccessible)
-        else:
-            return "none" # nothing is there
     def getScript():
         y  = ""
         if(paths.script == None):
@@ -97,7 +85,6 @@ class paths:
         else:
             y = paths.script
         return y
-
 x = open(paths.getScript()+"data/title",'r')
 ui.title = x.read()
 x.close()
@@ -108,11 +95,11 @@ class grid:
         self.height = h
         for x in range(self.width):
             for y in range(self.height):
-
-
-
+                
+                
+                
                 self.grid[str(x)+" - "+str(y)] = 0
-
+                
 
     def getPix(self, x,y):
         if(str(x)+" - "+str(y)) in self.grid:
@@ -128,7 +115,7 @@ class grid:
                         s+=ui.block
                     else:
                         s+=" "
-
+                        
                 else:
                     if(self.getPix(j,i) == "1"):
                         s+=" "
@@ -138,7 +125,6 @@ class grid:
             sleep(t)
 class number:
     def __init__(self,name,filep=None):
-
         self.grid = {}
         self.Name = None
         self.height = 7
@@ -251,7 +237,7 @@ class fun:
             time.sleep(0.01)
 
     def draw(g,t = 0):
-
+        
         h = str(dt.now().hour)
         while(len(h)<2):
             h = "0"+h
@@ -276,19 +262,19 @@ class fun:
             for x in range(nums.width):
                 for y in range(nums.height):
                     g.setPix((x+3)+((i+4)*(nums.width+2)),y+1,n.getPix(x,y))
-
+        
         g.setPix(nums.width*2+4,2,1)
         g.setPix(nums.width*2+4,6,1)
         g.setPix(nums.width*4+9,2,1)
         g.setPix(nums.width*4+9,6,1)
+        
 
-
-
-
+        
+        
         g.printGrid(t)
     class mnu:
         scene = 0
-
+        
     def menu():
         mainm = menu.scene("main","Main Menu",[menu.button("Flash (Default)",0),menu.button("Scroll",1),menu.button("Settings",2),menu.button("Quit",3)])
         scrollm = menu.scene("scroll","Scroll Menu",[menu.button("Slow",4),menu.button("Medium",5),menu.button("Fast",6),menu.button("Custom",7),menu.button("Back",8)])
@@ -296,7 +282,7 @@ class fun:
         modem = menu.scene("mode","Mode Menu",[menu.button("Spcae",11),menu.button("Back",8)])
         cmenu = menu.runner()
         while True:
-
+            
             x = mainm
             if(fun.mnu.scene == 0):
                 x = mainm
@@ -334,12 +320,21 @@ class fun:
                 fun.mnu.scene = 0
             elif(y == 9):
                 ui.invert = not (ui.invert)
-                x = config("settings",False)
-
-                x.set("invert",str(ui.invert).lower())
                 settingm = menu.scene("settings","Settings Menu", [ menu.button("Invert - " + str(ui.invert),9) , menu.button("Back",10) ] )
             elif(y == 10):
                 fun.mnu.scene = 0
+            
+            #         if(fun.mnu.btnn == 0):
+            #             (ui.invert) = not (ui.invert)
+            #         elif(fun.mnu.btnn == 1):
+            #             fun.mnu.scene = 0
+            #         elif(fun.mnu.btnn == 2):
+            #             exit()
+
+            #     if(fun.mnu.btnn < 0):
+            #         fun.mnu.btnn = 1
+            #     elif(fun.mnu.btnn >1):
+            #         fun.mnu.btnn = 0
     def default():
         fun.loop()
         input()
@@ -355,31 +350,68 @@ class fun:
         print(t)
     def inst():
         fun.draw()
-    def getFileOptions():
-        x = config("settings",False)
-        y = x.get("display")
-        if (y == None):
-            x.set("display","default")
-        else:
-            pass
-        del y
-        y = x.get("invert")
-        if (y == None):
-            x.set("invert","false")
-            ui.invert = False
-        else:
-            
-            if(y == "true"):
-                ui.invert = True
-            else:
-                ui.invert = False
+# class cmenu():
+#     buttonn = 0
+
+#     def keys(msg):
+#         screen = curses.initscr()
+#         curses.start_color()
+
+#         curses.noecho()
+#         curses.cbreak()
+#         screen.keypad(True)
+#         screen.clear()
+#         x = msg.split("|;")
+#         curses.init_pair(1, curses.COLOR_RED, curses.COLOR_WHITE)
+#         for i in range(len(x)):
+#             if(i%2 == 0):
+#                 screen.addstr(x[i])
+#             else:
+#                 screen.addstr(x[i], curses.color_pair(1))
+#         try:
+#             while True:
+
+#                 char = screen.getch()
+#                 if char == curses.KEY_RIGHT:
+#                     return 'right'
+#                 elif char == curses.KEY_LEFT:
+#                     return 'left'
+#                 elif char == curses.KEY_UP:
+#                     return 'up'
+#                 elif char == curses.KEY_DOWN:
+#                     return 'down'
+#                 elif (char == curses.KEY_ENTER) or (char == 10):
+#                     return 'return'
+#                 else:
+#                     print(char)
+#                     return char
+#         except:
+#             curses.nocbreak(); screen.keypad(0); curses.echo()
+
+#             curses.endwin()
 
 
+#         finally:
+#             curses.nocbreak(); screen.keypad(0); curses.echo()
+#             curses.endwin()
 
-fun.getFileOptions()
+
+#     def button(blst, actn,btbl = False):
+#         rets = ""
+#         for i in range(len(blst)):
+#             if i != actn:
+#                 rets += "[ "+blst[i]+" ]"
+#             elif i == actn:
+#                 rets += "|;[ "+blst[i]+" ]|;"
+#             if btbl:
+#                 rets+="\n"
+#         return rets
+# home = str(Path.home())
+# conf = home+"/.config/tClock/"
+
 args = (sys.argv)
-
-
+print(args)
+ui.invert = False
 if (len(args) == 1):
     fun.default()
 elif(len(args) == 2):
