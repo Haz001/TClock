@@ -1,11 +1,11 @@
 Package: tClock
-Version: 1.1
+Version: 1.2
 Section: Utilities
 Priority: optional
 Architecture: all
 Essential: no
 Depends: python3 (>=3.6)
-Installed-Size: 81.697265625
+Installed-Size: 97
 Maintainer: github.com/Haz001
 Description: Terminal Clock
 	A large digital clock that runs in a terminal.

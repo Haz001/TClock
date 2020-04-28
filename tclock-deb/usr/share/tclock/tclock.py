@@ -1,31 +1,28 @@
 #!/usr/bin/env python3
- #  _______ _____ _            _
- # |__   __/ ____| |          | |
- #    | | | |    | | ___   ___| | __
- #    | | | |    | |/ _ \ / __| |/ /
- #    | | | |____| | (_) | (__|   <
- #    |_|  \_____|_|\___/ \___|_|\_\
- # The Terminal Clock
- # MIT License
- # Copyright (c) 2019 Haz001
-
+#  _______ _____ _            _
+# |__   __/ ____| |          | |
+#    | | | |    | | ___   ___| | __
+#    | | | |    | |/ _ \ / __| |/ /
+#    | | | |____| | (_) | (__|   <
+#    |_|  \_____|_|\___/ \___|_|\_\
+# The Terminal Clock
+# MIT License
+# Copyright (c) 2019 Haz001
 from pathlib import Path
 import time
 import os
 debug = os.path.isfile("debug")
-debug = True
 if(debug):
     from menu import menu
     from config import config
-    print("debug")
+    print("debug!!!")
+    input()
 else:
     pass
-
 import sys
 from time import sleep
 from datetime import datetime as dt
 from sys import platform
-import curses
 class mode:
     def __init__(self,name,blockstart,blockcent,blockend):
         self.name = name
@@ -53,7 +50,6 @@ class ui:
     "mode7":
         mode("Tilde",'\x1b[7;30;39m',"~",'\x1b[0m')}
     def chngClass(n):
-
         modex = ui.modes["mode0"]
         modex = ui.modes["mode"+str(n)]
         # if(n == 1):
@@ -70,9 +66,7 @@ class ui:
         #     modex = mode6
         # elif(n == 7):
         #     modex = mode7
-
         ui.block = modex.blockstart + modex.blockcent + modex.blockend
-
 ui.chngClass(0)
 class paths:
     script = None
@@ -97,7 +91,6 @@ class paths:
         else:
             y = paths.script
         return y
-
 x = open(paths.getScript()+"data/title",'r')
 ui.title = x.read()
 x.close()
@@ -108,12 +101,7 @@ class grid:
         self.height = h
         for x in range(self.width):
             for y in range(self.height):
-
-
-
                 self.grid[str(x)+" - "+str(y)] = 0
-
-
     def getPix(self, x,y):
         if(str(x)+" - "+str(y)) in self.grid:
             return self.grid[str(x)+" - "+str(y)]
@@ -128,7 +116,6 @@ class grid:
                         s+=ui.block
                     else:
                         s+=" "
-
                 else:
                     if(self.getPix(j,i) == "1"):
                         s+=" "
@@ -138,13 +125,11 @@ class grid:
             sleep(t)
 class number:
     def __init__(self,name,filep=None):
-
         self.grid = {}
         self.Name = None
         self.height = 7
         self.width = 7
         self.name = name
-
         if (filep!= None):
             self.openPix(filep)
     def getPix(self,x,y):
@@ -172,7 +157,6 @@ class number:
         for i in range((self.height)):
             s = ""
             for j in range((self.width)):
-
                 if(self.getPix(i,j) == "1"):
                     s+="#"
                 else:
@@ -236,7 +220,6 @@ class fun:
         elif platform == "win32":
         	c ="cls"
         os.system(c)
-
     def loop(t = None):
         g = grid(nums.width*6+14,nums.height+2)
         sec = ""
@@ -249,9 +232,7 @@ class fun:
                 else:
                     fun.draw(g,t)
             time.sleep(0.01)
-
     def draw(g,t = 0):
-
         h = str(dt.now().hour)
         while(len(h)<2):
             h = "0"+h
@@ -276,19 +257,13 @@ class fun:
             for x in range(nums.width):
                 for y in range(nums.height):
                     g.setPix((x+3)+((i+4)*(nums.width+2)),y+1,n.getPix(x,y))
-
         g.setPix(nums.width*2+4,2,1)
         g.setPix(nums.width*2+4,6,1)
         g.setPix(nums.width*4+9,2,1)
         g.setPix(nums.width*4+9,6,1)
-
-
-
-
         g.printGrid(t)
     class mnu:
         scene = 0
-
     def menu():
         mainm = menu.scene("main","Main Menu",[menu.button("Flash (Default)",0),menu.button("Scroll",1),menu.button("Settings",2),menu.button("Quit",3)])
         scrollm = menu.scene("scroll","Scroll Menu",[menu.button("Slow",4),menu.button("Medium",5),menu.button("Fast",6),menu.button("Custom",7),menu.button("Back",8)])
@@ -296,7 +271,6 @@ class fun:
         modem = menu.scene("mode","Mode Menu",[menu.button("Spcae",11),menu.button("Back",8)])
         cmenu = menu.runner()
         while True:
-
             x = mainm
             if(fun.mnu.scene == 0):
                 x = mainm
@@ -335,7 +309,6 @@ class fun:
             elif(y == 9):
                 ui.invert = not (ui.invert)
                 x = config("settings",False)
-
                 x.set("invert",str(ui.invert).lower())
                 settingm = menu.scene("settings","Settings Menu", [ menu.button("Invert - " + str(ui.invert),9) , menu.button("Back",10) ] )
             elif(y == 10):
@@ -354,7 +327,8 @@ class fun:
         file.close()
         print(t)
     def inst():
-        fun.draw()
+        g = grid(nums.width*6+14,nums.height+2)
+        fun.draw(g)
     def getFileOptions():
         x = config("settings",False)
         y = x.get("display")
@@ -368,26 +342,36 @@ class fun:
             x.set("invert","false")
             ui.invert = False
         else:
-            
             if(y == "true"):
                 ui.invert = True
             else:
                 ui.invert = False
-
-
-
 fun.getFileOptions()
 args = (sys.argv)
-
-
+class flags:
+    help = False
+    github = False
+    menu = False
+    instant = False
 if (len(args) == 1):
     fun.default()
-elif(len(args) == 2):
-    if(args[1] == "-h"):
-        fun.help()
-    elif(args[1] == "-git"):
-        fun.github()
-    elif(args[1] == "-m"):
-        fun.menu()
-    elif(args[1] == "-i"):
-        fun.inst()
+for i in range(len(args)):
+    arg = args[i]
+    if((arg != None) and (len(arg)>=1)):
+        if(arg[0] == '-'):
+            if('h' in arg):
+                flags.help = True
+            elif('G' in arg):
+                flags.github = True
+            elif('m' in arg):
+                flags.menu = True
+            if('i' in arg):
+                flags.instant = True
+if(flags.help):
+    fun.help()
+if(flags.github):
+    fun.github()
+if(flags.instant):
+    fun.inst()
+if(flags.menu):
+    fun.menu()

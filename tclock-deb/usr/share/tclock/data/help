@@ -11,11 +11,11 @@ Copyright (c) 2019 Haz001
 Usage: tclock [OPTION] [FILE, DATE]...
 
 no optin		Default settings
--m			CLI Menu
--git        GitHub Link
+-m          CLI Menu
+-G          GitHub Link
 
 In Development
--i			One Instance (good for 'watch' command or just to check time) [InDevelopment]
+-i			    One Instance (good for 'watch' command or just to check time) [InDevelopment]
 -w [FILE]		Write out to file [InDevelopment]
 -c [DATE]		Count Down to that date [InDevelopment]
--g			Graphical Mode [InDevelopment]
+-g          Graphical Mode [InDevelopment]
