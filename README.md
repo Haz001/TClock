@@ -71,7 +71,7 @@ no optin		Default settings
 - 1 GiB of RAM free
 - GNU/Linux
 
-  
+
 ## Screenshots
 ### Menu
 <img src="img2.png"/>
@@ -80,9 +80,9 @@ no optin		Default settings
 ### Scroll options
 <img src="img3.png"/>
 ### Scroll animation in effect
-
 <img src="img4.png"/>
-
+### Invert
+<img src="img5.png"/>
 ## How to get the most out of this clock (GNU/Linux)
 
 <ol>
