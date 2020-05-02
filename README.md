@@ -55,17 +55,17 @@ no optin		Default settings
 ## Requirements
 ### Minimum
 
-- Width - 81 characters
-- Heights - 14 characters
+- Width - 56 characters
+- Heights - 15 characters
 - python3.6 installed
-- 83658 bytes free
-- 17.9 MiB of RAM free
+- 97 KiB free
+- 64 MiB of RAM free
 
 
 ### Recomended (been tested on)
 
-- Width - 81 characters
-- Heights - 14 characters
+- Width - 56 characters
+- Heights - 15 characters
 - Python3.7.5 installed
 - 1 MiB free
 - 1 GiB of RAM free

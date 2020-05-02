@@ -16,7 +16,6 @@ if(debug):
     from menu import menu
     from config import config
     print("debug!!!")
-    input()
 else:
     pass
 import sys
@@ -33,40 +32,34 @@ class ui:
     invert = False
     title = ""
     block = '\x1b[7;30;39m'+" "+'\x1b[0m'
-    modes = { "mode0":
+    modex = None
+    modes = {
+    "mode0": ## Blocks using spaces and colours
         mode("Space",'\x1b[7;30;39m'," ",'\x1b[0m'),
-    "mode1":
+    "mode1": ## Blocks using unicode
         mode("Block",'',"\u2588",''),
-    "mode2":
+    "mode2": ## Hash (#) and colours
         mode("Hash",'\x1b[7;30;39m',"#",'\x1b[0m'),
-    "mode3":
+    "mode3": ## Dash (-) and colours
         mode("Dash",'\x1b[7;30;39m',"-",'\x1b[0m'),
-    "mode4":
+    "mode4": ## Slash (/) and colours
         mode("Slash",'\x1b[7;30;39m',"/",'\x1b[0m'),
-    "mode5":
+    "mode5": ## Backslash (\) and colours
         mode("BackSlash",'\x1b[7;30;39m',"\\",'\x1b[0m'),
-    "mode6":
+    "mode6": ## Underscore (_) and colours
         mode("UnderScore",'\x1b[7;30;39m',"_",'\x1b[0m'),
-    "mode7":
+    "mode7": ## Tilde (~) and colours
         mode("Tilde",'\x1b[7;30;39m',"~",'\x1b[0m')}
     def chngClass(n):
-        modex = ui.modes["mode0"]
-        modex = ui.modes["mode"+str(n)]
-        # if(n == 1):
-        #     modex = mode1
-        # elif(n == 2):
-        #     modex = mode2
-        # elif(n == 3):
-        #     modex = mode3
-        # elif(n == 4):
-        #     modex = mode4
-        # elif(n == 5):
-        #     modex = mode5
-        # elif(n == 6):
-        #     modex = mode6
-        # elif(n == 7):
-        #     modex = mode7
-        ui.block = modex.blockstart + modex.blockcent + modex.blockend
+        if(str(type(n)) == "<class 'int'>"):
+            ui.modex = ui.modes["mode0"]
+            ui.modex = ui.modes["mode"+str(n)]
+            ui.block = ui.modex.blockstart + ui.modex.blockcent + ui.modex.blockend
+        else:
+            prin("error")
+
+
+
 ui.chngClass(0)
 class paths:
     script = None
@@ -265,11 +258,14 @@ class fun:
     class mnu:
         scene = 0
     def menu():
+        block = ui.modex.blockcent
+
         mainm = menu.scene("main","Main Menu",[menu.button("Flash (Default)",0),menu.button("Scroll",1),menu.button("Settings",2),menu.button("Quit",3)])
         scrollm = menu.scene("scroll","Scroll Menu",[menu.button("Slow",4),menu.button("Medium",5),menu.button("Fast",6),menu.button("Custom",7),menu.button("Back",8)])
-        settingm = menu.scene("settings","Settings Menu", [ menu.button("Invert - " + str(ui.invert),9) , menu.button("Back",10) ] )
-        modem = menu.scene("mode","Mode Menu",[menu.button("Spcae",11),menu.button("Back",8)])
+        settingm = menu.scene("settings","Settings Menu", [ menu.button("Invert - " + str(ui.invert),9), menu.button("Block type - ",12,block,2) , menu.button("Back",10) ] )
+        modem = menu.scene("mode","Mode Menu",[menu.button("Space - ",11," ",2),menu.button("Hash - ",11,"#",2),menu.button("Dash - ",11,"-",2),menu.button("Slash - ",11,"/",2),menu.button("Backslash - ",11,"\\",2),menu.button("underscore - ",11,"_",2),menu.button("Tilde - ",11,"~",2),menu.button("Back",8)])
         cmenu = menu.runner()
+        mainm.title = ui.title
         while True:
             x = mainm
             if(fun.mnu.scene == 0):
@@ -280,6 +276,7 @@ class fun:
                 x = settingm
             elif(fun.mnu.scene == 3):
                 x = modem
+
             y = cmenu.run(x)
             if(y == 0):
                 fun.loop()
@@ -310,9 +307,11 @@ class fun:
                 ui.invert = not (ui.invert)
                 x = config("settings",False)
                 x.set("invert",str(ui.invert).lower())
-                settingm = menu.scene("settings","Settings Menu", [ menu.button("Invert - " + str(ui.invert),9) , menu.button("Back",10) ] )
+                settingm = menu.scene("settings","Settings Menu", [ menu.button("Invert - " + str(ui.invert),9), menu.button("Block type - ",12,block,2) , menu.button("Back",10) ] )
             elif(y == 10):
                 fun.mnu.scene = 0
+            elif(y == 12):
+                fun.mnu.scene = 3
     def default():
         fun.loop()
         input()
@@ -333,9 +332,14 @@ class fun:
         x = config("settings",False)
         y = x.get("display")
         if (y == None):
-            x.set("display","default")
+            x.set("display","0")
         else:
-            pass
+            try:
+                z = int(y)
+                ui.chngClass(0)
+            except Exception as e:
+                z = 0
+                x.set("display","0")
         del y
         y = x.get("invert")
         if (y == None):
@@ -348,6 +352,7 @@ class fun:
                 ui.invert = False
 fun.getFileOptions()
 args = (sys.argv)
+
 class flags:
     help = False
     github = False
@@ -367,6 +372,7 @@ for i in range(len(args)):
                 flags.menu = True
             if('i' in arg):
                 flags.instant = True
+
 if(flags.help):
     fun.help()
 if(flags.github):
