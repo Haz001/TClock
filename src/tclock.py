@@ -15,7 +15,7 @@ debug = os.path.isfile("debug")
 if(debug):
     from menu import menu
     from config import config
-    print("debug!!!")
+    print("DEBUG version")
 else:
     pass
 import sys
@@ -66,7 +66,7 @@ class paths:
     name = None
     def type(filename):
         x = Path(filename)
-        if(x.is_file()):
+        if(x.is_fidrawsle()):
             return "file" # it is a file
         elif(x.is_dir()):
             return "dir"  # it is a directory
@@ -322,7 +322,8 @@ class fun:
         print(t)
     def help():
         file = open(paths.getScript()+"data/help")
-        t = file.read()
+
+        t = file.read().replace("\\t","\t")
         file.close()
         print(t)
     def inst():
@@ -362,16 +363,29 @@ if (len(args) == 1):
     fun.default()
 for i in range(len(args)):
     arg = args[i]
-    if((arg != None) and (len(arg)>=1)):
+    if((arg != None) and (len(arg)>1)):
         if(arg[0] == '-'):
-            if('h' in arg):
-                flags.help = True
-            elif('G' in arg):
-                flags.github = True
-            elif('m' in arg):
-                flags.menu = True
-            if('i' in arg):
-                flags.instant = True
+            if(arg[1] == '-'):
+                if(arg == "--help"):
+                    flags.help = True
+                elif(arg == "--git"):
+                    flags.github = True
+                elif(arg == "--menu"):
+                    flags.menu = True
+                elif(arg == "--inst"):
+                    flags.instant = True
+            else:
+                if('h' in arg):
+                    flags.help = True
+                elif('G' in arg):
+                    flags.github = True
+                elif('m' in arg):
+                    flags.menu = True
+                if('i' in arg):
+                    flags.instant = True
+
+
+
 
 if(flags.help):
     fun.help()

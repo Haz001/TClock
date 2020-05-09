@@ -10,12 +10,12 @@ Copyright (c) 2019 Haz001
 
 Usage: tclock [OPTION] [FILE, DATE]...
 
-no optin		Default settings
--m          CLI Menu
--G          GitHub Link
-
+no optin\t\tDefault settings
+-h, --help\t\tHelp Menu
+-m, --menu\t\tCLI Menu
+-G, --git \t\tGitHub Link
+-i, --inst\t\tOne Instance (draws, through print and closes)
 In Development
--i			    One Instance (good for 'watch' command or just to check time) [InDevelopment]
--w [FILE]		Write out to file [InDevelopment]
--c [DATE]		Count Down to that date [InDevelopment]
--g          Graphical Mode [InDevelopment]
+-w [FILE]\t\tWrite out to file [InDevelopment]
+-c [DATE]\t\tCount Down to that date [InDevelopment]
+-g\t\t\tGraphical Mode [InDevelopment]

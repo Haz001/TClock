@@ -25,7 +25,9 @@ This clock has two main animation methords:
 - [x] Single argument management
 - [x] Help
 - [x] Saving Settings
-- [ ] Multi argument management
+- [x] Multi argument management
+- [ ] Revamp CLI and Draw processes
+- [ ] Add Curses Draw to the mix
 - [ ] Man file
 - [ ] One Instance option
 - [ ] Windows version, currently using curses module that doesn't exist in Windows, will add windows friendly menu
@@ -84,11 +86,17 @@ no optin		Default settings
 ### Invert
 <img src="img5.png"/>
 ## How to get the most out of this clock (GNU/Linux)
-
+### 
+### LightDM
 <ol>
-  <li>Press ctr+alt+F2 to enter a termianl view and login again.</li>
-  <li>Go to the directory it is stored in using the cd comand</li>
-  <li>run it with python3</li>
+  <li>Press ctr+alt+F3 to enter a termianl view and login again</li>
+    <ul>
+        To return to your normal GUI life just press:
+        <li>`CTR+ALT+F2` for GDM3 people</li>
+        <li>`CTR+ALT+F7` for LightDM people</li>
+        If you don't know what display manager you use just try both of them.
+    </ul>
+  <li>Run tClock</li>
   <li>Watch it for a couple seconds to a couple years.</li>
 </ol>
 
