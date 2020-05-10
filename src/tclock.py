@@ -332,11 +332,31 @@ class fun:
         fun.draw(g)
     def fixConfig(name,value):
         x = config("settings",False)
+        x.set(name, value)
+        del x
     def getFileOptions():
         x = config("settings",True)
         y = x.get("display")
+
+        if(y in ["0","1","2","3","4","5","6","7","8","9"]):
+            pass
+        else:
+            fun.fixConfig("display","0")
+            print("display value error, value reset")
+        del y
+        y = x.get("invert")
+        if(y == 'true'):
+            ui.invert = True
+        elif(y == 'false'):
+            ui.invert = False
+        else:
+            fun.fixConfig("invert","true")
+            print("invert value error, value reset")
+
+
+
 fun.getFileOptions()
-input(ui.invert)
+
 args = (sys.argv)
 
 class flags:

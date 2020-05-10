@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
- #  _ __ ___   ___ _ __  _   _   _ __  _   _ 
- # | '_ ` _ \ / _ \ '_ \| | | | | '_ \| | | |
- # | | | | | |  __/ | | | |_| |_| |_) | |_| |
- # |_| |_| |_|\___|_| |_|\__,_(_) .__/ \__, |
- #                              |_|    |___/ 
- # Menu
- # MIT License
- # Copyright (c) 2019 Haz001
+#  _ __ ___   ___ _ __  _   _   _ __  _   _
+# | '_ ` _ \ / _ \ '_ \| | | | | '_ \| | | |
+# | | | | | |  __/ | | | |_| |_| |_) | |_| |
+# |_| |_| |_|\___|_| |_|\__,_(_) .__/ \__, |
+#                              |_|    |___/
+# Menu
+# MIT License
+# Copyright (c) 2019 Haz001
 import platform
 if(platform.system() == "Linux"):
     import curses
@@ -27,14 +27,18 @@ class menu:
             elif(self.felement < 0):
                 self.felement = len(self.element)-1
     class button:
-        def __init__(self,text,fid):
-            
+        def __init__(self,text,fid,spec="",spect = 0):
             self.text = text
             self.fid = fid
+            self.spec = spec
+            self.spect = spect
     class runner:
+
         def __init__(self):
+            self.error = ""
             pass
         def run(self,scene):
+
             screen = curses.initscr()
             curses.start_color()
             curses.noecho()
@@ -48,57 +52,55 @@ class menu:
                     scene.inc(1)
                 elif (y == curses.KEY_UP):
                     scene.inc(-1)
-
-
                 elif((y == curses.KEY_ENTER)or(y == 10)):
                     x = False
-                    
+                elif((y == 410)):
+
+                    self.error="Resizing Window can cause errors"
                 else:
                     scene.title += (str(y))
-                # if char == curses.KEY_RIGHT:
-#                     return 'right'
-#                 elif char == curses.KEY_LEFT:
-#                     return 'left'
-#                 elif char == curses.KEY_UP:
-#                     return 'up'
-#                 elif char == curses.KEY_DOWN:
-#                     return 'down'
-#                 elif (char == curses.KEY_ENTER) or (char == 10):
-#                     return 'return'
-#                 else:
-#                     print(char)
-#                     return char
-                
             screen.clear()
             curses.nocbreak(); screen.keypad(0); curses.echo()
             curses.endwin()
             return scene.element[scene.felement].fid
-            
-
-
         def draw(self,screen,scene):
-           
-            
             screen.clear()
             screen.addstr(scene.title)
-            screen.addstr("\n")
+
+            curses.init_pair(3, curses.COLOR_WHITE, curses.COLOR_BLACK)
             curses.init_pair(1, curses.COLOR_RED, curses.COLOR_BLACK)
-
+            curses.init_pair(2, curses.COLOR_BLACK, curses.COLOR_WHITE)
+            curses.init_pair(4, curses.COLOR_RED, curses.COLOR_WHITE)
+            screen.addstr(self.error+"\n", curses.color_pair(4))
             for i in range(len(scene.element)):
-                screen.addstr("\n")
-                t = "["+scene.element[i].text+"]"
-                if (scene.felement == i):
-                    screen.addstr(">"+t, curses.color_pair(1))
-                else:
-                    screen.addstr(t)
-            screen.addstr("\n")
-            
-            
-        
-        
-    
 
-    
+                l = i + len(scene.title.split("\n"))
+                if(scene.element[i].spec == ""):
+                    t = "["+scene.element[i].text+"]"
+                    if (scene.felement == i):
+                        screen.addstr(l,0,">"+t, curses.color_pair(1))
+                    else:
+                        screen.addstr(l,0,t)
+                if(scene.element[i].spec != ""):
+                    t = "["+scene.element[i].text
+                    t2 = scene.element[i].spec
+                    t3 = "]"
+                    if (scene.felement == i):
+                        screen.addstr(l,0,">"+t, curses.color_pair(1))
+                        screen.addstr(l,len(t),t2,curses.color_pair(int(scene.element[i].spect)))
+                        screen.addstr(l,(len(t)+len(t2)),t3,curses.color_pair(1))
+                    else:
+                        screen.addstr(l,0,t)
+                        screen.addstr(l,len(t),t2,curses.color_pair(int(scene.element[i].spect)))
+                        screen.addstr(l,len(t)+len(t2),t3,curses.color_pair(0))
+            screen.addstr("\n")
+
+
+
+
+
+
+
 
 # buttonn = 0
 
@@ -159,7 +161,7 @@ class config:
 
     home = str(Path.home())
     def __init__(self, cf, reado=True):
-
+        #Path.home()+"/.config/tclock/"+cf+".conf"
         self.path = self.home+"/.config/tclock/"+cf+".conf"
         self.reado = reado
         self.sr = self.stream(self.path,reado)
@@ -170,10 +172,7 @@ class config:
         if(f == None):
             return None
         else:
-            if (f[0] == None):
-                return None
-            else:
-                return f[0]
+            return f
     def type(self, name):
         f = self.sr.read(name)
         if (len(f)<2):
@@ -224,72 +223,78 @@ class config:
 
         def uncomp(self):
             data = self.data
-            result = ""
-            part = 0 ## 0 - name,1 - value,  2 - type
-            count = 0
-            quotes = False
-            name = {}
+            result = {}
+            vnb = False ## False - name, True - Value
+            ##count = 0
+            qb = False ## Flips when in quote braket
+            name = []
+            value = []
             tname = ""
-            value = {}
             tvalue = ""
-            t = {}
-            tt = ""
             lstchr = ""
-            for i in range(len(data)):
-                cchar = data[i]
-                if(quotes):
-                    if((cchar=="\"")and not(lstchr == "\\")):
-                        quotes = False
-                    else:
-                        if (part == 0):
-                            tname += data[i]
-                        elif (part == 1):
-                            tvalue += data[i]
-                        elif (part == 2):
-                            tt += data[i]
-                else:
-                    if((cchar=="\n")or(cchar=="\r")):
-                        part = 0
-                        name[count] = tname
+            for i in range(len(data)):# starts loop through all characters
+                cchar = data[i]# sets cchar as character
+                if(qb):# checks if quotes flag is on
+                    if((cchar=="\"")and not(lstchr == "\\")):# if genuin quotes appears again
+                        qb = False # set quote flag as off
+                    else:# anything other than genuin quotes
+                        if (vnb):# check if value name bool is true
+                            tvalue += data[i] # write to the value
+                        else:# else
+                            tname += data[i]# write to the name
+                else: # when no quotes flag
+                    if((cchar=="\n")or(cchar=="\r")): # check if new line to start new value
+                        vnb = False # set to read name first again
+                        name.append(tname)
                         tname = ""
-                        value[count] = tvalue
+                        value.append(tvalue)
                         tvalue = ""
-                        if((tt == "")or(tt == None)):
-                            tt = "s"
-                        t[count] = tt
-                        tt = ""
-                        count += 1
+                        ##count += 1
                     elif((cchar==":")):
-                        part += 1
+                        vnb = True # now read value
                     elif(cchar=="\""):
-                        quotes = True
+                        qb = True
                 lstchr = cchar
-            result = (name, value, t)
+
+
+
             dic = {}
+            if(len(name)>= len(value)):
+                count = len(value)
+            else:
+                count = len(name)
+                #print("small error")
             for i in range(count):
-                if((name[i] != None)and(name[i] != None)):
-                    if(t[i] == ""):
-                        dic[name[i]] = [value[i]]
-                    else:
-                        dic[name[i]] = [value[i],t[i]]
+                if((name[i] != None)and(value[i] != None)):
+
+                    dic[name[i]] = value[i]
+                    ##print("-1-: "+str(i)+" "+str(name[i])+" " +str(value[i]))
             result = dic
+
             return result
         def read(self,name):
             x = self.uncomp()
+            #print("-1-"+str(x))
             result = ""
             if(name in x):
                 result = x[name]
             else:
                 result = None
+            #print("-2-"+str(result))
             return result
         def write(self,name,value):
             dic = self.uncomp()
+            ##print("-3-: "+str(dic))
             result = ""
             if(name in dic): ## This might be used later, don't optimize yet.
                 dic[name] = value
             else:
                 dic[name] = value
             x = [ [k,v] for k, v in dic.items() ] ## convets dictionary to list
+            ##print("-2-: "+str(x))
+
+
+
             lname = []
             lvalue = []
             for i in range(len(x)):
@@ -306,24 +311,38 @@ class config:
             f.close()
 # NOTE: Simple test to see if it can write and read values
 def test(self = None):
+    file = open(str(Path.home())+"/.config/tclock/"+"testfile"+".conf",'w').close()
+    del file
     x = config("testfile",False)
     import random
     try:
-        y = str(random.randint(0,65535))
-        x.set("testvalue",str(y))
-        z = x.get("testvalue")
-        if(z == y):
-            pass
+        y1 = str(random.randint(0,65535))
+        y2 = str(random.randint(0,65535))
+        x.set("testvalue1",str(y1))
+        x.set("testvalue2",str(y2))
+        z1 = x.get("testvalue1")
+        z2 = x.get("testvalue2")
+        if((z1 == y1) and (z2 == y2)):
+            print("success")
+        elif(z2 == y2):
+            print("Error with Config.py\nInit Test Failed on read 1.\nExpecting '"+y1+"' as '"+str(type(y1))+"' but got '"+z1+"' as '"+str(type(z1))+"'")
+            exit()
+        elif(z1 == y1):
+            print("Error with Config.py\nInit Test Failed on read 2.\nExpecting '"+y2+"' as '"+str(type(y2))+"' but got '"+z2+"' as '"+str(type(z2))+"'")
+            exit()
         else:
-            print("Error with Config.py\nInit Test Failed.\nExpecting '"+y+"' as '"+str(type(y))+"' but got '"+z+"' as '"+str(type(z))+"'")
+            print("Error with Config.py\nInit Test Failed on both reads.\nExpecting '"+y1+"' and '"+y2+"' as '"+str(type(y1))+"' and '"+str(type(y1))+"'  but got '"+z1+"' and '"+z2+"' as '"+str(type(z1))+"' and '"+str(type(z1))+"'")
             exit()
     except OSError as e:
         print("OS error: "+str(e))
         exit()
     finally:
         del x
-        del y
-        del z
+        del y1
+        del z1
+        del y2
+        del z2
+
 test()
 #!/usr/bin/env python3
 #  _______ _____ _            _
@@ -342,8 +361,7 @@ debug = os.path.isfile("debug")
 if(debug):
     from menu import menu
     from config import config
-    print("debug!!!")
-    input()
+    print("DEBUG version")
 else:
     pass
 import sys
@@ -360,47 +378,41 @@ class ui:
     invert = False
     title = ""
     block = '\x1b[7;30;39m'+" "+'\x1b[0m'
-    modes = { "mode0":
+    modex = None
+    modes = {
+    "mode0": ## Blocks using spaces and colours
         mode("Space",'\x1b[7;30;39m'," ",'\x1b[0m'),
-    "mode1":
+    "mode1": ## Blocks using unicode
         mode("Block",'',"\u2588",''),
-    "mode2":
+    "mode2": ## Hash (#) and colours
         mode("Hash",'\x1b[7;30;39m',"#",'\x1b[0m'),
-    "mode3":
+    "mode3": ## Dash (-) and colours
         mode("Dash",'\x1b[7;30;39m',"-",'\x1b[0m'),
-    "mode4":
+    "mode4": ## Slash (/) and colours
         mode("Slash",'\x1b[7;30;39m',"/",'\x1b[0m'),
-    "mode5":
+    "mode5": ## Backslash (\) and colours
         mode("BackSlash",'\x1b[7;30;39m',"\\",'\x1b[0m'),
-    "mode6":
+    "mode6": ## Underscore (_) and colours
         mode("UnderScore",'\x1b[7;30;39m',"_",'\x1b[0m'),
-    "mode7":
+    "mode7": ## Tilde (~) and colours
         mode("Tilde",'\x1b[7;30;39m',"~",'\x1b[0m')}
     def chngClass(n):
-        modex = ui.modes["mode0"]
-        modex = ui.modes["mode"+str(n)]
-        # if(n == 1):
-        #     modex = mode1
-        # elif(n == 2):
-        #     modex = mode2
-        # elif(n == 3):
-        #     modex = mode3
-        # elif(n == 4):
-        #     modex = mode4
-        # elif(n == 5):
-        #     modex = mode5
-        # elif(n == 6):
-        #     modex = mode6
-        # elif(n == 7):
-        #     modex = mode7
-        ui.block = modex.blockstart + modex.blockcent + modex.blockend
+        if(str(type(n)) == "<class 'int'>"):
+            ui.modex = ui.modes["mode0"]
+            ui.modex = ui.modes["mode"+str(n)]
+            ui.block = ui.modex.blockstart + ui.modex.blockcent + ui.modex.blockend
+        else:
+            prin("error")
+
+
+
 ui.chngClass(0)
 class paths:
     script = None
     name = None
     def type(filename):
         x = Path(filename)
-        if(x.is_file()):
+        if(x.is_fidrawsle()):
             return "file" # it is a file
         elif(x.is_dir()):
             return "dir"  # it is a directory
@@ -592,11 +604,14 @@ class fun:
     class mnu:
         scene = 0
     def menu():
+        block = ui.modex.blockcent
+
         mainm = menu.scene("main","Main Menu",[menu.button("Flash (Default)",0),menu.button("Scroll",1),menu.button("Settings",2),menu.button("Quit",3)])
         scrollm = menu.scene("scroll","Scroll Menu",[menu.button("Slow",4),menu.button("Medium",5),menu.button("Fast",6),menu.button("Custom",7),menu.button("Back",8)])
-        settingm = menu.scene("settings","Settings Menu", [ menu.button("Invert - " + str(ui.invert),9) , menu.button("Back",10) ] )
-        modem = menu.scene("mode","Mode Menu",[menu.button("Spcae",11),menu.button("Back",8)])
+        settingm = menu.scene("settings","Settings Menu", [ menu.button("Invert - " + str(ui.invert),9), menu.button("Block type - ",12,block,2) , menu.button("Back",10) ] )
+        modem = menu.scene("mode","Mode Menu",[menu.button("Space - ",11," ",2),menu.button("Hash - ",11,"#",2),menu.button("Dash - ",11,"-",2),menu.button("Slash - ",11,"/",2),menu.button("Backslash - ",11,"\\",2),menu.button("underscore - ",11,"_",2),menu.button("Tilde - ",11,"~",2),menu.button("Back",8)])
         cmenu = menu.runner()
+        mainm.title = ui.title
         while True:
             x = mainm
             if(fun.mnu.scene == 0):
@@ -607,6 +622,7 @@ class fun:
                 x = settingm
             elif(fun.mnu.scene == 3):
                 x = modem
+
             y = cmenu.run(x)
             if(y == 0):
                 fun.loop()
@@ -637,9 +653,12 @@ class fun:
                 ui.invert = not (ui.invert)
                 x = config("settings",False)
                 x.set("invert",str(ui.invert).lower())
-                settingm = menu.scene("settings","Settings Menu", [ menu.button("Invert - " + str(ui.invert),9) , menu.button("Back",10) ] )
+                del x
+                settingm = menu.scene("settings","Settings Menu", [ menu.button("Invert - " + str(ui.invert),9), menu.button("Block type - ",12,block,2) , menu.button("Back",10) ] )
             elif(y == 10):
                 fun.mnu.scene = 0
+            elif(y == 12):
+                fun.mnu.scene = 3
     def default():
         fun.loop()
         input()
@@ -650,31 +669,42 @@ class fun:
         print(t)
     def help():
         file = open(paths.getScript()+"data/help")
-        t = file.read()
+
+        t = file.read().replace("\\t","\t")
         file.close()
         print(t)
     def inst():
         g = grid(nums.width*6+14,nums.height+2)
         fun.draw(g)
-    def getFileOptions():
+    def fixConfig(name,value):
         x = config("settings",False)
+        x.set(name, value)
+        del x
+    def getFileOptions():
+        x = config("settings",True)
         y = x.get("display")
-        if (y == None):
-            x.set("display","default")
-        else:
+
+        if(y in ["0","1","2","3","4","5","6","7","8","9"]):
             pass
+        else:
+            fun.fixConfig("display","0")
+            print("display value error, value reset")
         del y
         y = x.get("invert")
-        if (y == None):
-            x.set("invert","false")
+        if(y == 'true'):
+            ui.invert = True
+        elif(y == 'false'):
             ui.invert = False
         else:
-            if(y == "true"):
-                ui.invert = True
-            else:
-                ui.invert = False
+            fun.fixConfig("invert","true")
+            print("invert value error, value reset")
+
+
+
 fun.getFileOptions()
+
 args = (sys.argv)
+
 class flags:
     help = False
     github = False
@@ -684,16 +714,30 @@ if (len(args) == 1):
     fun.default()
 for i in range(len(args)):
     arg = args[i]
-    if((arg != None) and (len(arg)>=1)):
+    if((arg != None) and (len(arg)>1)):
         if(arg[0] == '-'):
-            if('h' in arg):
-                flags.help = True
-            elif('G' in arg):
-                flags.github = True
-            elif('m' in arg):
-                flags.menu = True
-            if('i' in arg):
-                flags.instant = True
+            if(arg[1] == '-'):
+                if(arg == "--help"):
+                    flags.help = True
+                elif(arg == "--git"):
+                    flags.github = True
+                elif(arg == "--menu"):
+                    flags.menu = True
+                elif(arg == "--inst"):
+                    flags.instant = True
+            else:
+                if('h' in arg):
+                    flags.help = True
+                elif('G' in arg):
+                    flags.github = True
+                elif('m' in arg):
+                    flags.menu = True
+                if('i' in arg):
+                    flags.instant = True
+
+
+
+
 if(flags.help):
     fun.help()
 if(flags.github):

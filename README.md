@@ -10,7 +10,7 @@ The Terminal Clock
 MIT License
 Copyright (c) 2019 Haz001
 ```
-Version 1.1
+Version 1.3
 
 A large digital clock that runs in a terminal. <br/>
 This clock has two main animation methords:
@@ -86,7 +86,7 @@ no optin		Default settings
 ### Invert
 <img src="img5.png"/>
 ## How to get the most out of this clock (GNU/Linux)
-### 
+###
 ### LightDM
 <ol>
   <li>Press ctr+alt+F3 to enter a termianl view and login again</li>

@@ -15,8 +15,7 @@ debug = os.path.isfile("debug")
 if(debug):
     from menu import menu
     from config import config
-    print("debug!!!")
-    input()
+    print("DEBUG version")
 else:
     pass
 import sys
@@ -33,47 +32,41 @@ class ui:
     invert = False
     title = ""
     block = '\x1b[7;30;39m'+" "+'\x1b[0m'
-    modes = { "mode0":
+    modex = None
+    modes = {
+    "mode0": ## Blocks using spaces and colours
         mode("Space",'\x1b[7;30;39m'," ",'\x1b[0m'),
-    "mode1":
+    "mode1": ## Blocks using unicode
         mode("Block",'',"\u2588",''),
-    "mode2":
+    "mode2": ## Hash (#) and colours
         mode("Hash",'\x1b[7;30;39m',"#",'\x1b[0m'),
-    "mode3":
+    "mode3": ## Dash (-) and colours
         mode("Dash",'\x1b[7;30;39m',"-",'\x1b[0m'),
-    "mode4":
+    "mode4": ## Slash (/) and colours
         mode("Slash",'\x1b[7;30;39m',"/",'\x1b[0m'),
-    "mode5":
+    "mode5": ## Backslash (\) and colours
         mode("BackSlash",'\x1b[7;30;39m',"\\",'\x1b[0m'),
-    "mode6":
+    "mode6": ## Underscore (_) and colours
         mode("UnderScore",'\x1b[7;30;39m',"_",'\x1b[0m'),
-    "mode7":
+    "mode7": ## Tilde (~) and colours
         mode("Tilde",'\x1b[7;30;39m',"~",'\x1b[0m')}
     def chngClass(n):
-        modex = ui.modes["mode0"]
-        modex = ui.modes["mode"+str(n)]
-        # if(n == 1):
-        #     modex = mode1
-        # elif(n == 2):
-        #     modex = mode2
-        # elif(n == 3):
-        #     modex = mode3
-        # elif(n == 4):
-        #     modex = mode4
-        # elif(n == 5):
-        #     modex = mode5
-        # elif(n == 6):
-        #     modex = mode6
-        # elif(n == 7):
-        #     modex = mode7
-        ui.block = modex.blockstart + modex.blockcent + modex.blockend
+        if(str(type(n)) == "<class 'int'>"):
+            ui.modex = ui.modes["mode0"]
+            ui.modex = ui.modes["mode"+str(n)]
+            ui.block = ui.modex.blockstart + ui.modex.blockcent + ui.modex.blockend
+        else:
+            prin("error")
+
+
+
 ui.chngClass(0)
 class paths:
     script = None
     name = None
     def type(filename):
         x = Path(filename)
-        if(x.is_file()):
+        if(x.is_fidrawsle()):
             return "file" # it is a file
         elif(x.is_dir()):
             return "dir"  # it is a directory
@@ -265,11 +258,14 @@ class fun:
     class mnu:
         scene = 0
     def menu():
+        block = ui.modex.blockcent
+
         mainm = menu.scene("main","Main Menu",[menu.button("Flash (Default)",0),menu.button("Scroll",1),menu.button("Settings",2),menu.button("Quit",3)])
         scrollm = menu.scene("scroll","Scroll Menu",[menu.button("Slow",4),menu.button("Medium",5),menu.button("Fast",6),menu.button("Custom",7),menu.button("Back",8)])
-        settingm = menu.scene("settings","Settings Menu", [ menu.button("Invert - " + str(ui.invert),9) , menu.button("Back",10) ] )
-        modem = menu.scene("mode","Mode Menu",[menu.button("Spcae",11),menu.button("Back",8)])
+        settingm = menu.scene("settings","Settings Menu", [ menu.button("Invert - " + str(ui.invert),9), menu.button("Block type - ",12,block,2) , menu.button("Back",10) ] )
+        modem = menu.scene("mode","Mode Menu",[menu.button("Space - ",11," ",2),menu.button("Hash - ",11,"#",2),menu.button("Dash - ",11,"-",2),menu.button("Slash - ",11,"/",2),menu.button("Backslash - ",11,"\\",2),menu.button("underscore - ",11,"_",2),menu.button("Tilde - ",11,"~",2),menu.button("Back",8)])
         cmenu = menu.runner()
+        mainm.title = ui.title
         while True:
             x = mainm
             if(fun.mnu.scene == 0):
@@ -280,6 +276,7 @@ class fun:
                 x = settingm
             elif(fun.mnu.scene == 3):
                 x = modem
+
             y = cmenu.run(x)
             if(y == 0):
                 fun.loop()
@@ -310,9 +307,12 @@ class fun:
                 ui.invert = not (ui.invert)
                 x = config("settings",False)
                 x.set("invert",str(ui.invert).lower())
-                settingm = menu.scene("settings","Settings Menu", [ menu.button("Invert - " + str(ui.invert),9) , menu.button("Back",10) ] )
+                del x
+                settingm = menu.scene("settings","Settings Menu", [ menu.button("Invert - " + str(ui.invert),9), menu.button("Block type - ",12,block,2) , menu.button("Back",10) ] )
             elif(y == 10):
                 fun.mnu.scene = 0
+            elif(y == 12):
+                fun.mnu.scene = 3
     def default():
         fun.loop()
         input()
@@ -323,31 +323,42 @@ class fun:
         print(t)
     def help():
         file = open(paths.getScript()+"data/help")
-        t = file.read()
+
+        t = file.read().replace("\\t","\t")
         file.close()
         print(t)
     def inst():
         g = grid(nums.width*6+14,nums.height+2)
         fun.draw(g)
-    def getFileOptions():
+    def fixConfig(name,value):
         x = config("settings",False)
+        x.set(name, value)
+        del x
+    def getFileOptions():
+        x = config("settings",True)
         y = x.get("display")
-        if (y == None):
-            x.set("display","default")
-        else:
+
+        if(y in ["0","1","2","3","4","5","6","7","8","9"]):
             pass
+        else:
+            fun.fixConfig("display","0")
+            print("display value error, value reset")
         del y
         y = x.get("invert")
-        if (y == None):
-            x.set("invert","false")
+        if(y == 'true'):
+            ui.invert = True
+        elif(y == 'false'):
             ui.invert = False
         else:
-            if(y == "true"):
-                ui.invert = True
-            else:
-                ui.invert = False
+            fun.fixConfig("invert","true")
+            print("invert value error, value reset")
+
+
+
 fun.getFileOptions()
+
 args = (sys.argv)
+
 class flags:
     help = False
     github = False
@@ -357,16 +368,30 @@ if (len(args) == 1):
     fun.default()
 for i in range(len(args)):
     arg = args[i]
-    if((arg != None) and (len(arg)>=1)):
+    if((arg != None) and (len(arg)>1)):
         if(arg[0] == '-'):
-            if('h' in arg):
-                flags.help = True
-            elif('G' in arg):
-                flags.github = True
-            elif('m' in arg):
-                flags.menu = True
-            if('i' in arg):
-                flags.instant = True
+            if(arg[1] == '-'):
+                if(arg == "--help"):
+                    flags.help = True
+                elif(arg == "--git"):
+                    flags.github = True
+                elif(arg == "--menu"):
+                    flags.menu = True
+                elif(arg == "--inst"):
+                    flags.instant = True
+            else:
+                if('h' in arg):
+                    flags.help = True
+                elif('G' in arg):
+                    flags.github = True
+                elif('m' in arg):
+                    flags.menu = True
+                if('i' in arg):
+                    flags.instant = True
+
+
+
+
 if(flags.help):
     fun.help()
 if(flags.github):
