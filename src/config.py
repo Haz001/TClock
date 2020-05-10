@@ -14,7 +14,7 @@ class config:
 
     home = str(Path.home())
     def __init__(self, cf, reado=True):
-
+        #Path.home()+"/.config/tclock/"+cf+".conf"
         self.path = self.home+"/.config/tclock/"+cf+".conf"
         self.reado = reado
         self.sr = self.stream(self.path,reado)
@@ -25,10 +25,7 @@ class config:
         if(f == None):
             return None
         else:
-            if (f[0] == None):
-                return None
-            else:
-                return f[0]
+            return f
     def type(self, name):
         f = self.sr.read(name)
         if (len(f)<2):
@@ -79,72 +76,78 @@ class config:
 
         def uncomp(self):
             data = self.data
-            result = ""
-            part = 0 ## 0 - name,1 - value,  2 - type
-            count = 0
-            quotes = False
-            name = {}
+            result = {}
+            vnb = False ## False - name, True - Value
+            ##count = 0
+            qb = False ## Flips when in quote braket
+            name = []
+            value = []
             tname = ""
-            value = {}
             tvalue = ""
-            t = {}
-            tt = ""
             lstchr = ""
-            for i in range(len(data)):
-                cchar = data[i]
-                if(quotes):
-                    if((cchar=="\"")and not(lstchr == "\\")):
-                        quotes = False
-                    else:
-                        if (part == 0):
-                            tname += data[i]
-                        elif (part == 1):
-                            tvalue += data[i]
-                        elif (part == 2):
-                            tt += data[i]
-                else:
-                    if((cchar=="\n")or(cchar=="\r")):
-                        part = 0
-                        name[count] = tname
+            for i in range(len(data)):# starts loop through all characters
+                cchar = data[i]# sets cchar as character
+                if(qb):# checks if quotes flag is on
+                    if((cchar=="\"")and not(lstchr == "\\")):# if genuin quotes appears again
+                        qb = False # set quote flag as off
+                    else:# anything other than genuin quotes
+                        if (vnb):# check if value name bool is true
+                            tvalue += data[i] # write to the value
+                        else:# else
+                            tname += data[i]# write to the name
+                else: # when no quotes flag
+                    if((cchar=="\n")or(cchar=="\r")): # check if new line to start new value
+                        vnb = False # set to read name first again
+                        name.append(tname)
                         tname = ""
-                        value[count] = tvalue
+                        value.append(tvalue)
                         tvalue = ""
-                        if((tt == "")or(tt == None)):
-                            tt = "s"
-                        t[count] = tt
-                        tt = ""
-                        count += 1
+                        ##count += 1
                     elif((cchar==":")):
-                        part += 1
+                        vnb = True # now read value
                     elif(cchar=="\""):
-                        quotes = True
+                        qb = True
                 lstchr = cchar
-            result = (name, value, t)
+
+
+
             dic = {}
+            if(len(name)>= len(value)):
+                count = len(value)
+            else:
+                count = len(name)
+                #print("small error")
             for i in range(count):
-                if((name[i] != None)and(name[i] != None)):
-                    if(t[i] == ""):
-                        dic[name[i]] = [value[i]]
-                    else:
-                        dic[name[i]] = [value[i],t[i]]
+                if((name[i] != None)and(value[i] != None)):
+
+                    dic[name[i]] = value[i]
+                    ##print("-1-: "+str(i)+" "+str(name[i])+" " +str(value[i]))
             result = dic
+
             return result
         def read(self,name):
             x = self.uncomp()
+            #print("-1-"+str(x))
             result = ""
             if(name in x):
                 result = x[name]
             else:
                 result = None
+            #print("-2-"+str(result))
             return result
         def write(self,name,value):
             dic = self.uncomp()
+            ##print("-3-: "+str(dic))
             result = ""
             if(name in dic): ## This might be used later, don't optimize yet.
                 dic[name] = value
             else:
                 dic[name] = value
             x = [ [k,v] for k, v in dic.items() ] ## convets dictionary to list
+            ##print("-2-: "+str(x))
+
+
+
             lname = []
             lvalue = []
             for i in range(len(x)):
@@ -161,22 +164,36 @@ class config:
             f.close()
 # NOTE: Simple test to see if it can write and read values
 def test(self = None):
+    file = open(str(Path.home())+"/.config/tclock/"+"testfile"+".conf",'w').close()
+    del file
     x = config("testfile",False)
     import random
     try:
-        y = str(random.randint(0,65535))
-        x.set("testvalue",str(y))
-        z = x.get("testvalue")
-        if(z == y):
-            pass
+        y1 = str(random.randint(0,65535))
+        y2 = str(random.randint(0,65535))
+        x.set("testvalue1",str(y1))
+        x.set("testvalue2",str(y2))
+        z1 = x.get("testvalue1")
+        z2 = x.get("testvalue2")
+        if((z1 == y1) and (z2 == y2)):
+            print("success")
+        elif(z2 == y2):
+            print("Error with Config.py\nInit Test Failed on read 1.\nExpecting '"+y1+"' as '"+str(type(y1))+"' but got '"+z1+"' as '"+str(type(z1))+"'")
+            exit()
+        elif(z1 == y1):
+            print("Error with Config.py\nInit Test Failed on read 2.\nExpecting '"+y2+"' as '"+str(type(y2))+"' but got '"+z2+"' as '"+str(type(z2))+"'")
+            exit()
         else:
-            print("Error with Config.py\nInit Test Failed.\nExpecting '"+y+"' as '"+str(type(y))+"' but got '"+z+"' as '"+str(type(z))+"'")
+            print("Error with Config.py\nInit Test Failed on both reads.\nExpecting '"+y1+"' and '"+y2+"' as '"+str(type(y1))+"' and '"+str(type(y1))+"'  but got '"+z1+"' and '"+z2+"' as '"+str(type(z1))+"' and '"+str(type(z1))+"'")
             exit()
     except OSError as e:
         print("OS error: "+str(e))
         exit()
     finally:
         del x
-        del y
-        del z
+        del y1
+        del z1
+        del y2
+        del z2
+
 test()

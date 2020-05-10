@@ -307,6 +307,7 @@ class fun:
                 ui.invert = not (ui.invert)
                 x = config("settings",False)
                 x.set("invert",str(ui.invert).lower())
+                del x
                 settingm = menu.scene("settings","Settings Menu", [ menu.button("Invert - " + str(ui.invert),9), menu.button("Block type - ",12,block,2) , menu.button("Back",10) ] )
             elif(y == 10):
                 fun.mnu.scene = 0
@@ -329,29 +330,13 @@ class fun:
     def inst():
         g = grid(nums.width*6+14,nums.height+2)
         fun.draw(g)
-    def getFileOptions():
+    def fixConfig(name,value):
         x = config("settings",False)
+    def getFileOptions():
+        x = config("settings",True)
         y = x.get("display")
-        if (y == None):
-            x.set("display","0")
-        else:
-            try:
-                z = int(y)
-                ui.chngClass(0)
-            except Exception as e:
-                z = 0
-                x.set("display","0")
-        del y
-        y = x.get("invert")
-        if (y == None):
-            x.set("invert","false")
-            ui.invert = False
-        else:
-            if(y == "true"):
-                ui.invert = True
-            else:
-                ui.invert = False
 fun.getFileOptions()
+input(ui.invert)
 args = (sys.argv)
 
 class flags:
