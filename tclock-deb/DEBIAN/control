@@ -5,7 +5,7 @@ Priority: optional
 Architecture: all
 Essential: no
 Depends: python3 (>=3.6)
-Installed-Size: 97
+Installed-Size: 81.5
 Maintainer: github.com/Haz001
 Description: Terminal Clock
 	A large digital clock that runs in a terminal.
