@@ -13,12 +13,14 @@
 	chmod 777 install/usr/share/tclock/main.py
 	echo "[ 4/11] - making symbolic link"
 	ln -s /usr/share/tclock/main.py ./tclock-deb/usr/bin/tclock
+	ln -s /usr/share/tclock/main.py ./install/usr/bin/tclock
 	echo "[ 5/11] - Packaging For Debian"
 	dpkg --build tclock-deb
-	echo "[ 6/11] - removing symbolic link"
-	rm ./tclock-deb/usr/bin/tclock
-	echo "[ 7/11] - Compressing Install.zip"
+	echo "[ 6/11] - Compressing Install.zip"
     zip -r9 build/tclock.zip ./install/
+    echo "[ 7/11] - removing symbolic link"
+	rm ./tclock-deb/usr/bin/tclock
+    rm ./install/usr/bin/tclock
     echo "[ 8/11] - Copying last files to build folder"
 	mv tclock-deb.deb build/tclock.deb
 	cp LICENSE build/LICENSE
