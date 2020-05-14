@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-#  _ __ ___   ___ _ __  _   _   _ __  _   _
-# | '_ ` _ \ / _ \ '_ \| | | | | '_ \| | | |
-# | | | | | |  __/ | | | |_| |_| |_) | |_| |
-# |_| |_| |_|\___|_| |_|\__,_(_) .__/ \__, |
-#                              |_|    |___/
-# Menu
+#   ____ _     ___
+#  / ___| |   |_ _|  _ __  _   _
+# | |   | |    | |  | '_ \| | | |
+# | |___| |___ | | _| |_) | |_| |
+#  \____|_____|___(_) .__/ \__, |
+#                   |_|    |___/
+# Command Line Interface Class
 # MIT License
 # Copyright (c) 2019 Haz001
 import os
@@ -20,7 +21,6 @@ else:
 class graphics:
     def __init__(self):
         if(platform.system().lower() == "windows"):
-
             a = os.popen("mode con",'r').read()
             b = a.split("\n")
             c = b[4].split(" ")
@@ -44,19 +44,16 @@ class graphics:
             self.width = input("Width of terminal enviroment\n>")
             self.height = input("Height of terminal enviroment\n>")
     def drawloop(self):
-
         self.screen = curses.initscr()
         curses.start_color()
         curses.noecho()
         curses.cbreak()
         self.screen.keypad(True)
-
         curses.init_pair(3, curses.COLOR_WHITE, curses.COLOR_BLACK)
         curses.init_pair(1, curses.COLOR_RED, curses.COLOR_BLACK)
         curses.init_pair(2, curses.COLOR_BLACK, curses.COLOR_WHITE)
         curses.init_pair(4, curses.COLOR_RED, curses.COLOR_WHITE)
     def draw(self,x,y,char,color):
-
         x = int(x)
         y = int(y)
         if((x in range(self.width+1)) and (y in range(self.height+1))):
@@ -66,11 +63,10 @@ class graphics:
                 pass
     def grep(self):
         self.screen.getch()
+
+# NOTE: Test code
 x = graphics()
 x.drawloop()
-
-#x.draw(1,x.height-1,'#',3)
-#x.draw(x.width-2,x.height-1,'#',3)
 s = str(x.width)+" \u2715 "+str(x.height)
 for i in range(len(s)):
     w = int((x.width/2)+(i-len(s)/2))
@@ -82,14 +78,12 @@ x.draw(0,1,' ',2)
 x.draw(x.width-1,x.height-1,' ',2)
 x.draw(x.width-2,x.height-1,' ',2)
 x.draw(x.width-1,x.height-2,' ',2)
-
 x.draw(x.width-2,0,' ',2)
 x.draw(x.width-1,1,' ',2)
 x.draw(x.width-1,0,' ',2)
 x.draw(0,x.height-1,' ',2)
 x.draw(1,x.height-1,' ',2)
 x.draw(0,x.height-2,' ',2)
-
-#x.draw(x.width,x.height,'#',3)
 x.draw(x.width-1,x.height-1,' ',2)
 x.grep()
+del x #cleanup
