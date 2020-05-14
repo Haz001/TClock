@@ -28,7 +28,7 @@
 	echo "[ 9/11] - Conveting deb to rpm, slp, lsb and tgz"
 	sudo alien --to-rpm tclock.deb;sudo alien --to-slp tclock.deb;sudo alien --to-lsb tclock.deb; sudo alien --to-tgz tclock.deb
 	echo "[10/11] - Taking ownership over all files"
-	sudo chown haz:haz ./*
+	sudo chown harry:harry ./*
 	echo "[11/11] - Done"
 }||{
 	echo "Failed"
