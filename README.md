@@ -1,4 +1,5 @@
-# TClock
+TClock
+-----
 ```
  _______ _____ _            _
 |__   __/ ____| |          | |
@@ -27,10 +28,15 @@ This clock has two main animation methords:
 - [x] Saving Settings
 - [x] Multi argument management
 - [ ] Revamp CLI and Draw processes
-- [ ] Add Curses Draw to the mix
+  - Make it Windows compatible
+  - Make it more advanced to allow more effects and stuff.
+- [ ] Add Curses Draw as an option to see the time
+  - this will allow different aligned text and cooler effects like dissolve and wipe effects
 - [ ] Man file
-- [ ] One Instance option
-- [ ] Windows version, currently using curses module that doesn't exist in Windows, will add windows friendly menu
+  - for Unix and Unix-Like (Linux) users to be able to get a manual.
+- [x] One Instance option ```tclock -i```
+  - Quickly get the time
+
 - [ ] Write out to file, so you don't have to use ```tclock -i >> filename```
 - [ ] Multiple types of frames
 - [ ] Mutliple font sizes, small, medium and large
@@ -41,18 +47,30 @@ This clock has two main animation methords:
 
 ## Help
 
-<pre>Usage: tclock [OPTION] [FILE, DATE]...
+```
+_______ _____ _            _
+|__   __/ ____| |          | |
+  | | | |    | | ___   ___| | __
+  | | | |    | |/ _ \ / __| |/ /
+  | | | |____| | (_) | (__|   <
+  |_|  \_____|_|\___/ \___|_|\_\
+The Terminal Clock
+MIT License
+Copyright (c) 2019 Haz001
 
-no optin		Default settings
--m			CLI Menu
--git			GitHub Link
+Usage: tclock [OPTION] [FILE, DATE]...
 
-<span style="background-color:#CC0000"><b>In Development</b></span>
-<span style="background-color:#CC0000"><b>-i</b></span>			<span style="background-color:#CC0000"><b>One Instance (good for &apos;watch&apos; command or just to check time) [InDevelopment]</b></span>
-<span style="background-color:#CC0000"><b>-w [FILE]</b></span>		<span style="background-color:#CC0000"><b>Write out to file [InDevelopment]</b></span>
-<span style="background-color:#CC0000"><b>-c [DATE]</b></span>		<span style="background-color:#CC0000"><b>Count Down to that date [InDevelopment]</b></span>
-<span style="background-color:#CC0000"><b>-g</b></span>			<span style="background-color:#CC0000"><b>Graphical Mode [InDevelopment]</b></span>
-</pre>
+no option           Default settings
+-h, --help          Help Menu
+-m, --menu          CLI Menu
+-G, --git           GitHub Link
+-i, --inst          One Instance (draws, through print and closes)
+In Development
+-w [FILE]           Write out to file [InDevelopment]
+-c [DATE]           Count Down to that date [InDevelopment]
+-g                  Graphical Mode [InDevelopment]
+
+```
 
 ## Requirements
 ### Minimum
