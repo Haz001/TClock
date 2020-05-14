@@ -34,6 +34,7 @@ This clock has two main animation methords:
   - this will allow different aligned text and cooler effects like dissolve and wipe effects
 - [ ] Man file
   - for Unix and Unix-Like (Linux) users to be able to get a manual.
+- [ ] uptime mode to display uptime
 - [x] One Instance option ```tclock -i```
   - Quickly get the time
 
@@ -113,21 +114,19 @@ In Development
 
 <img src="img5.png"/>
 
-## How to get the most out of this clock (GNU/Linux)
-<ol>
-  <li>Press ctr+alt+F3 to enter a termianl view and login again</li>
-    <ul>
-        To return to your normal GUI life just press:
-        <li>`CTR+ALT+F2` for GDM3 people</li>
-        <li>`CTR+ALT+F7` for LightDM people</li>
-        If you don't know what display manager you use just try both of them.
-    </ul>
-  <li>Run tClock/</li>
-   if installed it will be `tclock` else cd into the `src` directory and then `python3 main.py`
-  <li>Watch it for a couple seconds to a couple years.</li>
- <li>Stop it with `CTRL + Z` and then enter the menu by adding '` -m`' to the end of the command</li>
-</ol>
-
+## How to get the most out of this clock:
+### Unix and Unix like Systems
+1. Press `CTRL + ALT + F3` to enter into terminal mode and login
+  - To return to your normal GUI life just press:
+    - `CTRL + ALT + F2` for GDM3
+    - `CTRL + ALT + F7` for LightDM<br/>
+    If you don't know what display manager you are just press `F1` to `F7` with `CTRL + ALT` held down.
+2. Go into the Menu and customize your clock
+  - If you installed it use the command `tclock -m`
+  - If you cloned the git repo `cd` into `src` directory and then type `python3 tclock.py -m`
+3. Use the CLI menu to customize your clock
+4. Go to the main menu and enter into either Flash or Scroll to see your customized clock display the time.
+5. Watch the time pass by second by second for either a few seconds or a few days or years
 <!--
 ## How to get the most out of this clock (windows)
 
