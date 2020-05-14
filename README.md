@@ -94,18 +94,26 @@ In Development
 
 ## Screenshots
 ### Menu
+
 <img src="img2.png"/>
+
 ### Flash
+
 <img src="img1.png"/>
+
 ### Scroll options
+
 <img src="img3.png"/>
+
 ### Scroll animation in effect
+
 <img src="img4.png"/>
+
 ### Invert
+
 <img src="img5.png"/>
+
 ## How to get the most out of this clock (GNU/Linux)
-###
-### LightDM
 <ol>
   <li>Press ctr+alt+F3 to enter a termianl view and login again</li>
     <ul>
@@ -114,8 +122,10 @@ In Development
         <li>`CTR+ALT+F7` for LightDM people</li>
         If you don't know what display manager you use just try both of them.
     </ul>
-  <li>Run tClock</li>
+  <li>Run tClock/</li>
+   if installed it will be `tclock` else cd into the `src` directory and then `python3 main.py`
   <li>Watch it for a couple seconds to a couple years.</li>
+ <li>Stop it with `CTRL + Z` and then enter the menu by adding '` -m`' to the end of the command</li>
 </ol>
 
 <!--
