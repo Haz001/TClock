@@ -127,11 +127,4 @@ In Development
 3. Use the CLI menu to customize your clock
 4. Go to the main menu and enter into either Flash or Scroll to see your customized clock display the time.
 5. Watch the time pass by second by second for either a few seconds or a few days or years
-<!--
-## How to get the most out of this clock (windows)
 
-<ol>
-  <li>Install python3.x from <a href="https://www.python.org/downloads/release/python-372/">python.org</a>.</li>
-  <li>Double click the python file and then when cmd opens it press F11 to go fullscreen</li>
-</ol>
--->
