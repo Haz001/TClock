@@ -31,7 +31,7 @@ class mode:
 class ui:
 	invert = False
 	title = ""
-	block = '\x1b[7;30;39m'+" "+'\x1b[0m'
+	block = '\x1b[7;30;39m'+"#"+'\x1b[0m'
 	modex = None
 	modes = {
 	"mode0": ## Blocks using spaces and colours
@@ -60,7 +60,7 @@ class ui:
 
 
 
-ui.chngClass(0)
+ui.chngClass(1)
 class paths:
 	script = None
 	name = None
