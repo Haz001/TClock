@@ -27,6 +27,7 @@ This clock has two main animation methords:
 - [x] Help
 - [x] Saving Settings
 - [x] Multi argument management
+- [ ] Uptime mode
 - [ ] Revamp CLI and Draw processes
   - Make it Windows compatible
   - Make it more advanced to allow more effects and stuff.
